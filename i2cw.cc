@@ -186,7 +186,7 @@ int main(int argc, char** argv)
     };
 
     uint8_t addr = getopti("address", "a");
-    uint8_t reg = getopti("reg", "r");
+    uint8_t reg = getopti("register", "r");
 
     DataType type = DataType::None;
 
