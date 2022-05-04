@@ -36,13 +36,7 @@ done
     exit 1
 }
 
-while [[ $token != 'q' ]]; do
-    # shellcheck disable=SC2030
-    token=$(read -rn 1)
-done &
-
-# shellcheck disable=SC2031
-while [[ "$token" != 'q' ]]; do
+while :; do
     ((temp = $(cat "$temp_path") / 1000))
 
     case $temp in
