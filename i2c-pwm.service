@@ -1,0 +1,9 @@
+[Unit]
+Description=Control the speed of fan via I2C protocol
+
+[Service]
+ExecStart=/sbin/i2c-pwm
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
