@@ -58,22 +58,28 @@ void help(char** argv, int state)
         --pos;
     }
 
-    if (++pos > len) {
-        pos = 0;
+    const char* prog = argv[0];
+
+    if (++pos <= len) {
+        prog += pos;
     }
 
     printf("\n"
            "%s - Send data to devices via I2C protocol\n"
            "\n"
+           "usage:\n"
+           "  %s <-d id...> <-a addr> <-r byte> <-db|dw data>\n"
+           "  %s <-h|--help>\n"
+           "\n"
            "options:\n"
+           "  -a,  --address   addr    i2c device address (hex)\n"
+           "  -d,  --device    id...   i2c file devices' id\n"
+           "  -db, --data-byte byte    send a byte of data (hex)\n"
+           "  -dw, --data-word word    send a word of data (hex)\n"
+           "  -r,  --register  byte    device register to access (hex)\n"
            "  -h,  --help              show this help\n"
-           "  -d,  --device id...      i2c file devices\n"
-           "  -a,  --address addr      i2c device address\n"
-           "  -r,  --reg byte          device register to access\n"
-           "  -db, --data-byte byte    send a byte of data\n"
-           "  -dw, --data-word word    send a word of data\n"
            "\n",
-        argv[0] + pos);
+        prog, prog, prog);
 
     exit(state);
 }
@@ -113,7 +119,7 @@ int main(int argc, char** argv)
     }
 
 #if defined(DEBUG)
-    std::cout << "args: {";
+    std::cout << "\nargs: {";
 
     for (auto& arg : args) {
         std::cout << "\n\t" << arg.first << ": [";
@@ -125,7 +131,7 @@ int main(int argc, char** argv)
         std::cout << "\n\t],";
     }
 
-    std::cout << "\n}\n";
+    std::cout << "\n}\n\n";
 #endif
 
     block(help)
@@ -176,7 +182,7 @@ int main(int argc, char** argv)
             help(argv, state);
         }
 
-        return atoi(iter->second[0].c_str());
+        return std::stoi(iter->second[0], nullptr, 16);
     };
 
     uint8_t addr = getopti("address", "a");
