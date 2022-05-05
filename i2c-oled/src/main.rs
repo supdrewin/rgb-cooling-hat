@@ -21,11 +21,11 @@ fn main() -> io::Result<()> {
 
     loop {
         let temp = fs::read_to_string(&args[2])?;
-        let i = temp.len() - 3;
+        let temp = temp.trim().parse::<usize>().expect("Failed to parse temp");
 
         display.clear().expect("Failed to clear screen");
 
-        write!(display, "Temp: {}.{} C", &temp[..i], &temp[i..])
+        write!(display, "Temp: {}.{} C", temp / 1000, temp % 1000)
             .expect("Failed to write formatted data");
 
         thread::sleep(Duration::from_secs(1));
