@@ -27,6 +27,7 @@ fn main() -> io::Result<()> {
 
     let text_style = MonoTextStyleBuilder::new()
         .font(&FONT_8X13_BOLD)
+        .background_color(BinaryColor::Off)
         .text_color(BinaryColor::On)
         .build();
 
