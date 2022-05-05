@@ -49,23 +49,28 @@ done
 }
 
 if $i2cdetect_path -y "$device" | grep -q 3c; then
-    $(which i2c-oled) "$device" "$temp_path" &
+    i2c_oled_path=$(which i2c-oled 2>/dev/null)
+
+    if [[ $i2c_oled_path ]]; then
+        $i2c_oled_path "$device" "$temp_path" &
+    else
+        echo "i2c-oled not found, but ignore it..."
+    fi
 fi
 
 while :; do
     ((temp = $(cat "$temp_path") / 1000))
 
     case $temp in
-    [0-1][0-9]) speed=0x02 ;;
-    2[0-9]) speed=0x03 ;;
-    3[0-4]) speed=0x04 ;;
-    3[5-9]) speed=0x05 ;;
-    4[0-4]) speed=0x06 ;;
-    4[5-9]) speed=0x07 ;;
-    5[0-4]) speed=0x08 ;;
-    5[5-9]) speed=0x09 ;;
-    [6-9][0-9]) speed=0x01 ;;
-    *) speed=0x00 ;;
+    0[0-9]) speed=0x02 ;;
+    1[0-9]) speed=0x03 ;;
+    2[0-9]) speed=0x04 ;;
+    3[0-4]) speed=0x05 ;;
+    3[5-9]) speed=0x06 ;;
+    4[0-4]) speed=0x07 ;;
+    4[5-9]) speed=0x08 ;;
+    5[0-4]) speed=0x09 ;;
+    *) speed=0x01 ;;
     esac
 
     $i2cw_path \
