@@ -25,7 +25,7 @@ fn main() -> io::Result<()> {
 
         display.clear().expect("Failed to clear screen");
 
-        write!(display, "Temp: {:02}.{:03} C", &temp[..i], &temp[i..])
+        write!(display, "Temp: {}.{} C", &temp[..i], &temp[i..])
             .expect("Failed to write formatted data");
 
         thread::sleep(Duration::from_secs(1));
