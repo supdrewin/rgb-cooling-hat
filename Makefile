@@ -2,10 +2,10 @@ CXXFLAGS += -pipe -O2
 
 i2cw: i2cw.cc
 
+.PHONY: i2c-oled install uninstall clean
+
 i2c-oled:
 	cd $@ && cargo b -r
-
-.PHONY: install uninstall clean
 
 install: i2cw i2c-oled
 	install -Dm644 99-rgb-cooling-hat.rules -t /etc/udev/rules.d
