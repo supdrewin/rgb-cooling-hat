@@ -7,7 +7,14 @@ i2cw_path=$(which i2cw 2>/dev/null)
 
 [[ $i2cw_path ]] || {
     echo "i2cw not found, maybe you have a broken install?"
-    exit 1
+    exit 127
+}
+
+i2cdetect_path=$(which i2cdetect 2>/dev/null)
+
+[[ $i2cdetect_path ]] || {
+    echo "i2cdetect not found, please install it and try again!"
+    exit 127
 }
 
 zones=$(find /sys/class/thermal -name "thermal_zone[0-9]*")
@@ -19,20 +26,25 @@ for zone in $zones; do
     }
 done
 
-list=$(find /dev -name "i2c-[0-9]*")
+[[ $temp_path ]] || {
+    echo "Watch the CPU thermal is unsupported! Abort..."
+    exit 132
+}
 
-for i2c in $list; do
-    i2c=${i2c##*-}
+devices=$(find /dev -name "i2c-[0-9]*")
 
-    if i2cdetect -y "$i2c" | grep -q 0d; then
+for device in $devices; do
+    device=${device##*-}
+
+    if $i2cdetect_path -y "$device" | grep -q 0d; then
         break
     fi
 
-    unset i2c
+    unset device
 done
 
-[[ $i2c ]] || {
-    echo "Required device not found!"
+[[ $device ]] || {
+    echo "Required device not found, make sure it's plugged in!"
     exit 1
 }
 
@@ -53,10 +65,10 @@ while :; do
     esac
 
     $i2cw_path \
-        --data-byte $speed \
-        --device "$i2c" \
-        --address 0d \
-        --register 08
+        --device "$device" \
+        --address 0x0d \
+        --register 0x08 \
+        --data-byte $speed
 
     sleep 1
 done
