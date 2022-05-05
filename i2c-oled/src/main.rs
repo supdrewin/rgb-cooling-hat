@@ -49,7 +49,8 @@ fn main() -> io::Result<()> {
     .unwrap();
 
     loop {
-        let temp = fs::read_to_string(&args[2])?.parse::<usize>().unwrap();
+        let temp = fs::read_to_string(&args[2])?;
+        let temp = temp.trim().parse::<usize>().unwrap();
         let temp = format!("{:02}.{:03}", temp / 1000, temp % 1000);
 
         Text::with_baseline(&temp, Point::new(56, 18), text_style, Baseline::Top)
