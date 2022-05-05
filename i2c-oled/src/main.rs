@@ -10,6 +10,8 @@ use i2c::I2C;
 use ssd1306::{prelude::*, I2CDisplayInterface, Ssd1306};
 use std::{env, fs, io, thread, time::Duration};
 
+const FREQ_PATH: &str = "/sys/devices/system/cpu/cpufreq/policy0/scaling_cur_freq";
+
 fn main() -> io::Result<()> {
     let args = env::args().collect::<Vec<_>>();
     assert_eq!(args.len(), 3);
@@ -50,6 +52,14 @@ fn main() -> io::Result<()> {
     .unwrap();
 
     loop {
+        let freq = fs::read_to_string(FREQ_PATH)?;
+        let freq = freq.trim().parse::<usize>().unwrap() / 1000;
+        let freq = format!("{freq:04}");
+
+        Text::with_baseline(&freq, Point::new(56, 4), text_style, Baseline::Top)
+            .draw(&mut display)
+            .unwrap();
+
         let temp = fs::read_to_string(&args[2])?;
         let temp = temp.trim().parse::<usize>().unwrap();
         let temp = format!("{:02}.{:03}", temp / 1000, temp % 1000);
