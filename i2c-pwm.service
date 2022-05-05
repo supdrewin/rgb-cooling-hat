@@ -4,6 +4,7 @@ Description=Control the speed of fan via I2C protocol
 [Service]
 ExecStart=/sbin/i2c-pwm
 Restart=on-failure
+RestartPreventExitStatus=127 132
 
 [Install]
 WantedBy=multi-user.target
