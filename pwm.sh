@@ -48,6 +48,10 @@ done
     exit 1
 }
 
+if $i2cdetect_path -y "$device" | grep -q 3c; then
+    $(which i2c-oled) "$device" "$temp_path" &
+fi
+
 while :; do
     ((temp = $(cat "$temp_path") / 1000))
 
