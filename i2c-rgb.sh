@@ -51,9 +51,9 @@ available colors:
     --color() {
         local color=${1##0x}
 
-        local r=${color[1, 2]}
-        local g=${color[3, 4]}
-        local b=${color[5, 6]}
+        local r=${color:0:2}
+        local g=${color:2:2}
+        local b=${color:4:2}
 
         $i2c_rgb_cmd -r 0x01 -db "$r"
         $i2c_rgb_cmd -r 0x02 -db "$g"
