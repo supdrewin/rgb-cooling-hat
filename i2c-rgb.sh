@@ -26,6 +26,27 @@
     export i2c_rgb_cmd
 }
 
+--help() {
+    local self=${0##*/}
+
+    echo "
+$self - Utility for RGB control
+
+usage:
+  $self --select 1|2|3|all [--color [0x]ffffff]
+  $self --mode mode(see below) [--color color(see below)]
+  $self --speed low|middle|high
+  $self --close
+  $self --help
+
+available modes:
+  water, breathing, marquee, rainbow, dazzle
+
+available colors:
+  red, green, blue, yellow, purple, cyan, white
+"
+}
+
 --select() {
     --color() {
         local color=${1##0x}
