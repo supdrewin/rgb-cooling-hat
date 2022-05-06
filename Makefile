@@ -13,6 +13,7 @@ install: i2cw i2c-oled
 	install -Dm755 i2cw -t /sbin
 	install -Dm755 i2c-oled/target/release/i2c-oled -t /sbin
 	install -Dm755 pwm.sh /sbin/i2c-pwm
+	install -Dm755 i2c-rgb.sh /sbin/i2c-rgb
 
 uninstall:
 	$(RM) /etc/udev/rules.d/99-rgb-cooling-hat.rules
@@ -20,6 +21,7 @@ uninstall:
 	$(RM) /sbin/i2cw
 	$(RM) /sbin/i2c-oled
 	$(RM) /sbin/i2c-pwm
+	$(RM) /sbin/i2c-rgb
 
 clean:
 	$(RM) i2cw
