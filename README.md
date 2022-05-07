@@ -6,8 +6,10 @@ This repository aims to control the RGB fan of
 ### Pre-required
 
 Hardware:
-`YB-EPV02` and compatable board
-(e.g. RasPi, RockPi...)
+- `YB-EPV02` and compatable board
+  (e.g. RasPi, RockPi...)
+- Make sure the GPIO port has I2C enabled
+  (maybe modify the overlay config)
 
 Language:
 - Bash - Install bash
