@@ -10,9 +10,9 @@ Hardware:
 (e.g. RasPi, RockPi...)
 
 Language:
-- Bash  Install bash
-- C++   Install gcc or clang
-- Rust  Install via rustup
+- Bash - Install bash
+- C++  - Install gcc or clang
+- Rust - Install via rustup
 
 ### Install
 
@@ -31,7 +31,7 @@ $ systemctl enable --now i2c-pwm
 ### Uninstall
 
 If you enable the pwm service previous,
-Firstly disable it:
+firstly disable it:
 
 ``` shell
 $ systemctl disable --now i2c-pwm
