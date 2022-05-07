@@ -5,7 +5,7 @@ i2cw: i2cw.cc
 .PHONY: i2c-oled install uninstall clean
 
 i2c-oled:
-	cd $@ && cargo b -r
+	cd $@ && cargo build --release
 
 install: i2cw i2c-oled
 	install -Dm644 LICENSE.md -t /usr/share/licenses/rgb-cooling-hat
