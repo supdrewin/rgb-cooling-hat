@@ -26,4 +26,5 @@ uninstall:
 	$(RM) /sbin/i2c-rgb
 
 clean:
+	cd i2c-oled && cargo clean
 	$(RM) i2cw
