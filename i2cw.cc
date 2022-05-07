@@ -25,6 +25,7 @@ template <typename T>
 using Vec = std::vector<T>;
 
 #include <algorithm>
+#include <cstddef>
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -43,10 +44,9 @@ extern "C" {
 
 #define block(comment)
 
-enum class DataType {
-    None = 0,
-    Byte = 1,
-    Word = 2,
+enum DataType : size_t {
+    Byte = 2,
+    Word = 3,
 };
 
 void help(char** argv, int state)
@@ -68,16 +68,15 @@ void help(char** argv, int state)
            "%s - Send data to devices via I2C protocol\n"
            "\n"
            "usage:\n"
-           "  %s <-d id...> <-a addr> <-r byte> <-db|dw data>\n"
+           "  %s <-d id...> <-a addr> <-r byte> <-d b|w data>\n"
            "  %s <-h|--help>\n"
            "\n"
            "options:\n"
-           "  -a,  --address   addr    i2c device address (hex)\n"
-           "  -d,  --device    id...   i2c file devices' id\n"
-           "  -db, --data-byte byte    send a byte of data (hex)\n"
-           "  -dw, --data-word word    send a word of data (hex)\n"
-           "  -r,  --register  byte    device register to access (hex)\n"
-           "  -h,  --help              show this help\n"
+           "  -a, --address                addr   i2c device address (hex)\n"
+           "  -i, --device                 id...  i2c file devices' id\n"
+           "  -d, --data <b, byte|w, word> data   send a byte/word of data (hex)\n"
+           "  -r, --register  byte                device register to access (hex)\n"
+           "  -h, --help                          show this help\n"
            "\n",
         prog, prog, prog);
 
@@ -154,7 +153,7 @@ int main(int argc, char** argv)
         auto iter = args.find("device");
 
         if (iter == args.end()) {
-            iter = args.find("d");
+            iter = args.find("i");
         }
 
         if (iter == args.end()) {
@@ -166,8 +165,7 @@ int main(int argc, char** argv)
         }
     }
 
-    auto getopti = [&](const char* l, const char* s,
-                       int state = EXIT_FAILURE) {
+    auto getopti = [&](const char* l, const char* s) {
         auto iter = args.find(l);
 
         if (iter == args.end()) {
@@ -175,11 +173,7 @@ int main(int argc, char** argv)
         }
 
         if (iter == args.end() || 1 != iter->second.size()) {
-            if (-1 == state) {
-                throw state;
-            }
-
-            help(argv, state);
+            help(argv, EXIT_FAILURE);
         }
 
         return std::stoi(iter->second[0], nullptr, 16);
@@ -188,25 +182,33 @@ int main(int argc, char** argv)
     uint8_t addr = getopti("address", "a");
     uint8_t reg = getopti("register", "r");
 
-    DataType type = DataType::None;
+    DataType type;
+    uint16_t data;
 
-    uint8_t byte;
-    uint16_t word;
+    block(data)
+    {
+        auto iter = args.find("data");
 
-    try {
-        byte = getopti("data-byte", "db", -1);
-        type = DataType::Byte;
-    } catch (int) {
-    }
+        if (iter == args.end()) {
+            iter = args.find("d");
+        }
 
-    try {
-        word = getopti("data-word", "dw", -1);
-        type = DataType::Byte;
-    } catch (int) {
-    }
+        if (iter == args.end() || 2 != iter->second.size()) {
+            help(argv, EXIT_FAILURE);
+        }
 
-    if (DataType::None == type) {
-        help(argv, EXIT_FAILURE);
+        auto const& tp = iter->second[0];
+
+        if ("byte" == tp || "b" == tp) {
+            type = DataType::Byte;
+        } else if ("word" == tp || "w" == tp) {
+            type = DataType::Word;
+        } else {
+            printf("Invalid data type: %s\n", tp.c_str());
+            help(argv, EXIT_FAILURE);
+        }
+
+        data = std::stoi(iter->second[1], nullptr, 16);
     }
 
     for (auto& file : files) {
@@ -223,29 +225,11 @@ int main(int argc, char** argv)
             exit(EXIT_FAILURE);
         }
 
-        switch (type) {
-        case DataType::Byte: {
-            auto db = (byte << 8) + reg;
+        auto buf = (data << 8) + reg;
 
-            if (0 > write(fd, &db, 2)) {
-                printf("Failed to write data: %04x\n", db);
-                exit(EXIT_FAILURE);
-            }
-
-            break;
-        }
-        case DataType::Word: {
-            auto dw = (word << 8) + reg;
-
-            if (0 > write(fd, &dw, 3)) {
-                printf("Failed to write data: %06x\n", dw);
-                exit(EXIT_FAILURE);
-            }
-
-            break;
-        }
-        case DataType::None:
-            help(argv, EXIT_FAILURE);
+        if (0 > write(fd, &buf, type)) {
+            printf("Failed to write data: %x\n", buf);
+            exit(EXIT_FAILURE);
         }
     }
 

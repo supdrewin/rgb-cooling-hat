@@ -77,7 +77,7 @@ while :; do
         --device "$device" \
         --address 0x0d \
         --register 0x08 \
-        --data-byte $speed
+        --data byte $speed
 
     sleep 1
 done

@@ -22,7 +22,7 @@
 }
 
 [[ $i2c_rgb_cmd ]] || {
-    i2c_rgb_cmd="$i2cw_path -d $i2c_dev -a 0x0d"
+    i2c_rgb_cmd="$i2cw_path -i $i2c_dev -a 0x0d"
     export i2c_rgb_cmd
 }
 
@@ -39,11 +39,9 @@ usage:
   $self --close
   $self --help
 
-available modes:
-  water, breathing, marquee, rainbow, dazzle
-
-available colors:
-  red, green, blue, yellow, purple, cyan, white
+options:
+  mode   water|breathing|marquee|rainbow|dazzle
+  color  red|green|blue|yellow|purple|cyan|white
 "
 }
 
@@ -55,34 +53,34 @@ available colors:
         local g=${color:2:2}
         local b=${color:4:2}
 
-        $i2c_rgb_cmd -r 0x01 -db "$r"
-        $i2c_rgb_cmd -r 0x02 -db "$g"
-        $i2c_rgb_cmd -r 0x03 -db "$b"
+        $i2c_rgb_cmd -r 0x01 -d b "$r"
+        $i2c_rgb_cmd -r 0x02 -d b "$g"
+        $i2c_rgb_cmd -r 0x03 -d b "$b"
     }
 
     1() {
-        $i2c_rgb_cmd -r 0x00 -db 0x00
+        $i2c_rgb_cmd -r 0x00 -d b 0x00
 
         # shellcheck disable=SC2086
         $1 $2
     }
 
     2() {
-        $i2c_rgb_cmd -r 0x00 -db 0x01
+        $i2c_rgb_cmd -r 0x00 -d b 0x01
 
         # shellcheck disable=SC2086
         $1 $2
     }
 
     3() {
-        $i2c_rgb_cmd -r 0x00 -db 0x02
+        $i2c_rgb_cmd -r 0x00 -d b 0x02
 
         # shellcheck disable=SC2086
         $1 $2
     }
 
     all() {
-        $i2c_rgb_cmd -r 0x00 -db 0xff
+        $i2c_rgb_cmd -r 0x00 -d b 0xff
 
         # shellcheck disable=SC2086
         $1 $2
@@ -94,60 +92,60 @@ available colors:
 --mode() {
     --color() {
         red() {
-            $i2c_rgb_cmd -r 0x06 -db 0x00
+            $i2c_rgb_cmd -r 0x06 -d b 0x00
         }
 
         green() {
-            $i2c_rgb_cmd -r 0x06 -db 0x01
+            $i2c_rgb_cmd -r 0x06 -d b 0x01
         }
 
         blue() {
-            $i2c_rgb_cmd -r 0x06 -db 0x02
+            $i2c_rgb_cmd -r 0x06 -d b 0x02
         }
 
         yellow() {
-            $i2c_rgb_cmd -r 0x06 -db 0x03
+            $i2c_rgb_cmd -r 0x06 -d b 0x03
         }
 
         purple() {
-            $i2c_rgb_cmd -r 0x06 -db 0x04
+            $i2c_rgb_cmd -r 0x06 -d b 0x04
         }
 
         cyan() {
-            $i2c_rgb_cmd -r 0x06 -db 0x05
+            $i2c_rgb_cmd -r 0x06 -d b 0x05
         }
 
         white() {
-            $i2c_rgb_cmd -r 0x06 -db 0x06
+            $i2c_rgb_cmd -r 0x06 -d b 0x06
         }
 
         "$1"
     }
 
     water() {
-        $i2c_rgb_cmd -r 0x04 -db 0x00
+        $i2c_rgb_cmd -r 0x04 -d b 0x00
 
         # shellcheck disable=SC2086
         $1 $2
     }
 
     breathing() {
-        $i2c_rgb_cmd -r 0x04 -db 0x01
+        $i2c_rgb_cmd -r 0x04 -d b 0x01
 
         # shellcheck disable=SC2086
         $1 $2
     }
 
     marquee() {
-        $i2c_rgb_cmd -r 0x04 -db 0x02
+        $i2c_rgb_cmd -r 0x04 -d b 0x02
     }
 
     rainbow() {
-        $i2c_rgb_cmd -r 0x04 -db 0x03
+        $i2c_rgb_cmd -r 0x04 -d b 0x03
     }
 
     dazzle() {
-        $i2c_rgb_cmd -r 0x04 -db 0x04
+        $i2c_rgb_cmd -r 0x04 -d b 0x04
     }
 
     "$@"
@@ -155,22 +153,22 @@ available colors:
 
 --speed() {
     low() {
-        $i2c_rgb_cmd -r 0x05 -db 0x00
+        $i2c_rgb_cmd -r 0x05 -d b 0x00
     }
 
     middle() {
-        $i2c_rgb_cmd -r 0x05 -db 0x01
+        $i2c_rgb_cmd -r 0x05 -d b 0x01
     }
 
     high() {
-        $i2c_rgb_cmd -r 0x05 -db 0x02
+        $i2c_rgb_cmd -r 0x05 -d b 0x02
     }
 
     "$1"
 }
 
 --close() {
-    $i2c_rgb_cmd -r 0x07 -db 0x00
+    $i2c_rgb_cmd -r 0x07 -d b 0x00
 }
 
 "$@"
