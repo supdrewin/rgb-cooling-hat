@@ -3,6 +3,13 @@
 This repository aims to control the RGB fan of
 `YB-EPV02` via I2C protocol.
 
+### Features
+
+- Auto changes the fan speed according to current tempearture.
+- Fully control the RGB LEDs via `i2c-rgb` command.
+- Provides I2C write feature via `i2cw` command.
+- Show current `Freq` and `Temp` if OLED display available.
+
 ### Pre-required
 
 Hardware:
