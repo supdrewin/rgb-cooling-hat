@@ -1,5 +1,7 @@
 CXXFLAGS += -pipe -O2
 
+all: i2cw i2c-oled
+
 i2cw: i2cw.cc
 
 .PHONY: i2c-oled install uninstall clean
@@ -7,7 +9,7 @@ i2cw: i2cw.cc
 i2c-oled:
 	cd $@ && cargo build --release
 
-install: i2cw i2c-oled
+install: all
 	install -Dm644 LICENSE.md -t /usr/share/licenses/rgb-cooling-hat
 	install -Dm644 99-rgb-cooling-hat.rules -t /etc/udev/rules.d
 	install -Dm644 i2c-pwm.service -t /lib/systemd/system
