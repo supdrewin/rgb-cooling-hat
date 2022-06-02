@@ -1,8 +1,12 @@
-CXXFLAGS += -pipe -O2
+CXXFLAGS += \
+	-O2 -flto -fno-exceptions -pedantic -pipe \
+	-Wall -Wextra -Wsign-conversion
 
 all: i2cw i2c-oled
 
-i2cw: i2cw.cc
+I2cDev.o: I2cDev.cc I2cDev.hh
+
+i2cw: i2cw.cc i2cw_help.cc I2cDev.o
 
 .PHONY: i2c-oled install uninstall clean
 
@@ -15,7 +19,7 @@ install: all
 	install -Dm644 i2c-pwm.service -t /lib/systemd/system
 	install -Dm755 i2cw -t /sbin
 	install -Dm755 i2c-oled/target/release/i2c-oled -t /sbin
-	install -Dm755 pwm.sh /sbin/i2c-pwm
+	install -Dm755 i2c-pwm.sh /sbin/i2c-pwm
 	install -Dm755 i2c-rgb.sh /sbin/i2c-rgb
 
 uninstall:
@@ -29,4 +33,4 @@ uninstall:
 
 clean:
 	cd i2c-oled && cargo clean
-	$(RM) i2cw
+	$(RM) I2cDev.o i2cw

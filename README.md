@@ -15,8 +15,8 @@ This repository aims to control the RGB fan of
 Hardware:
 - `YB-EPV02` and compatable board
   (e.g. RasPi, RockPi...)
-- Make sure the GPIO port has I2C enabled
-  (maybe modify the overlay config)
+- Enable I2C feature for GPIO pins
+  (using device tree overlay)
 
 Language:
 - Bash - Install bash

@@ -5,83 +5,14 @@
 /// License, v. 2.0. If a copy of the MPL was not distributed with this
 /// file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include <string>
-
-using String = std::string;
-
-#include <unordered_map>
-
-template <typename K, typename V>
-using HashMap = std::unordered_map<K, V>;
-
-#include <utility>
-
-template <typename K, typename V>
-using Pair = std::pair<K, V>;
-
-#include <vector>
-
-template <typename T>
-using Vec = std::vector<T>;
-
 #include <algorithm>
-#include <cstddef>
-#include <cstdint>
-#include <cstdio>
-#include <cstdlib>
 #include <cstring>
-#include <fcntl.h>
-#include <sys/ioctl.h>
-#include <unistd.h>
-
-extern "C" {
-#include <linux/i2c-dev.h>
-}
-
-#if defined(DEBUG)
 #include <iostream>
-#endif
 
-#define block(comment)
+#include "I2cDev.hh"
+#include "macro.hh"
 
-enum DataType : size_t {
-    Byte = 2,
-    Word = 3,
-};
-
-void help(char** argv, int state)
-{
-    int len = strlen(argv[0]),
-        pos = len - 1;
-
-    while (0 < pos && '/' != argv[0][pos]) {
-        --pos;
-    }
-
-    const char* prog = argv[0];
-
-    if (++pos <= len) {
-        prog += pos;
-    }
-
-    printf("\n"
-           "%s - Send data to devices via I2C protocol\n"
-           "\n"
-           "usage:\n"
-           "  %s <-d id...> <-a addr> <-r byte> <-d b|w data>\n"
-           "  %s <-h|--help>\n"
-           "\n"
-           "options:\n"
-           "  -a, --address                addr   i2c device address (hex)\n"
-           "  -i, --device                 id...  i2c file devices' id\n"
-           "  -d, --data <b, byte|w, word> data   send a byte/word of data (hex)\n"
-           "  -r, --register  byte                device register to access (hex)\n"
-           "  -h, --help                          show this help\n"
-           "\n",
-        prog, prog, prog);
-
-    exit(state);
-}
+void help(char**, int);
 
 int main(int argc, char** argv)
 {
@@ -182,8 +113,8 @@ int main(int argc, char** argv)
     uint8_t addr = getopti("address", "a");
     uint8_t reg = getopti("register", "r");
 
-    DataType type;
-    uint16_t data;
+    I2cDev::DataType type;
+    I2cDev::data_t data;
 
     block(data)
     {
@@ -200,38 +131,32 @@ int main(int argc, char** argv)
         auto const& tp = iter->second[0];
 
         if ("byte" == tp || "b" == tp) {
-            type = DataType::Byte;
+            type = I2cDev::Byte;
         } else if ("word" == tp || "w" == tp) {
-            type = DataType::Word;
+            type = I2cDev::Word;
         } else {
-            printf("Invalid data type: %s\n", tp.c_str());
+            std::cerr << "Invalid data type: "
+                      << tp << std::endl;
             help(argv, EXIT_FAILURE);
         }
 
-        data = std::stoi(iter->second[1], nullptr, 16);
+        data = static_cast<I2cDev::data_t>(std::stoi(
+            iter->second[1], nullptr, 16));
     }
+
+    auto status = EXIT_SUCCESS;
 
     for (auto& file : files) {
-        auto f = file.c_str();
-        auto fd = open(f, O_RDWR);
+        if (0 > I2cDev(file).write(addr, reg, type, data)) {
+            std::cerr << std::hex << "Failed to send data ["
+                      << data << "] using register ["
+                      << reg << "] to I2C device ["
+                      << file << "] via address ["
+                      << addr << "]!" << std::endl;
 
-        if (0 > fd) {
-            printf("Failed to open \"%s\"\n", f);
-            exit(EXIT_FAILURE);
-        }
-
-        if (0 > ioctl(fd, I2C_SLAVE, addr)) {
-            printf("Invalid address: %#4x\n", addr);
-            exit(EXIT_FAILURE);
-        }
-
-        auto buf = (data << 8) + reg;
-
-        if (0 > write(fd, &buf, type)) {
-            printf("Failed to write data: %x\n", buf);
-            exit(EXIT_FAILURE);
+            status = EXIT_FAILURE;
         }
     }
 
-    return EXIT_SUCCESS;
+    return status;
 }
