@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# i2c-pwm.sh - written by supdrewin
+# i2c-fan.sh - written by supdrewin
 # Wed May  4 21:12:16 CST 2022
 
 i2cw_path=$(which i2cw 2>/dev/null)

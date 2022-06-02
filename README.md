@@ -35,7 +35,7 @@ $ make install
 Optional enable the pwm service:
 
 ``` shell
-$ systemctl enable --now i2c-pwm
+$ systemctl enable --now i2c-fan
 ```
 
 ### Uninstall
@@ -44,7 +44,7 @@ If you enable the pwm service previous,
 firstly disable it:
 
 ``` shell
-$ systemctl disable --now i2c-pwm
+$ systemctl disable --now i2c-fan
 ```
 
 Uninstall all files:
