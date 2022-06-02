@@ -1,6 +1,6 @@
 # RGB Cooling HAT
 
-This repository aims to control the RGB fan of
+This repository aims to control the RGB fan and more of
 `YB-EPV02` via I2C protocol.
 
 ### Features
@@ -14,14 +14,15 @@ This repository aims to control the RGB fan of
 
 Hardware:
 - `YB-EPV02` and compatable board
-  (e.g. RasPi, RockPi...)
+  (e.g. Raspberry Pi, Rock Pi...)
 - Enable I2C feature for GPIO pins
   (using device tree overlay)
 
-Language:
-- Bash - Install bash
-- C++  - Install gcc or clang
-- Rust - Install via rustup
+Dependency:
+- bash
+- systemd (optional)
+- cargo (make)
+- git (make)
 
 ### Install
 
@@ -52,7 +53,7 @@ Uninstall all files:
 $ make uninstall
 ```
 
-### Warning
+### License
 
 This repository is unofficial and working myself,
 all code of this repository are under `MPL-2.0`,
