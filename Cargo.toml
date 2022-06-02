@@ -2,11 +2,16 @@
 name = "i2c-oled"
 version = "0.1.0"
 edition = "2021"
-authors = ["supdrewin"]
+repository = "https://github.com/supdrewin/rgb-cooling-hat"
 license = "MPL-2.0"
+authors = ["supdrewin"]
 
 [dependencies]
 embedded-graphics = "0.7.1"
 embedded-hal = "0.2.7"
 i2c-linux = "0.1.2"
 ssd1306 = "0.7.0"
+
+[profile.release]
+opt-level = 2
+lto = "thin"
