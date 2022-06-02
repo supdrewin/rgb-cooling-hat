@@ -70,10 +70,10 @@ int main(int argc, char** argv)
 
 #pragma mark help
     {
-        auto iter = args.find("help");
+        auto iter = args.find("h");
 
         if (iter == args.end()) {
-            iter = args.find("h");
+            iter = args.find("help");
         }
 
         if (iter != args.end()) {
@@ -83,10 +83,10 @@ int main(int argc, char** argv)
 #pragma mark help
 
     auto devices = [&]() {
-        auto iter = args.find("device");
+        auto iter = args.find("i");
 
         if (iter == args.end()) {
-            iter = args.find("i");
+            iter = args.find("device");
         }
 
         if (iter == args.end()) {
