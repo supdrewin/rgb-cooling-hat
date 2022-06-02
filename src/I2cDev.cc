@@ -5,26 +5,21 @@
 /// License, v. 2.0. If a copy of the MPL was not distributed with this
 /// file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include <fcntl.h>
-#include <linux/i2c-dev.h>
+#include <sys/fcntl.h>
 #include <sys/ioctl.h>
-#include <unistd.h>
+#include <sys/unistd.h>
 
 #include "I2cDev.hh"
-#include "macro.hh"
 
 I2cDev::I2cDev(I2cDev&& dev)
     : filename(dev.filename)
 {
 }
 
-I2cDev::I2cDev(String&& filename)
-    : filename(filename)
-{
-}
-
-I2cDev::I2cDev(String const& filename)
-    : filename(filename)
+I2cDev::I2cDev(std::string const& raw, InitType tp)
+    : filename(tp == InitType::Index
+            ? "/dev/i2c-" + raw
+            : raw)
 {
 }
 
@@ -33,39 +28,73 @@ void I2cDev::operator=(I2cDev&& dev)
     filename = std::move(dev.filename);
 }
 
+I2cDev::fd_t I2cDev::open() const
+{
+    return ::open(filename.c_str(), O_RDWR);
+}
+
 template <typename... Args>
 int I2cDev::write(uint8_t addr, uint8_t reg,
-    DataType type, Args... data) const
+    DataLen len, Args... data) const
 {
-    match_and_return(open(filename.c_str(), O_RDWR), fd, fd < 0);
-    write(fd, addr, reg, type, data...);
+    auto fd = open();
 
+    if (0 > fd) {
+        return fd;
+    }
+
+    write(fd, addr, reg, len, data...);
     return close(fd);
 }
 
 template <>
 int I2cDev::write(uint8_t addr, uint8_t reg,
-    DataType type, data_t data) const
+    DataLen len, data_t data) const
 {
-    match_and_return(open(filename.c_str(), O_RDWR), fd, fd < 0);
-    write(fd, addr, reg, type, data);
+    auto fd = open();
 
+    if (0 > fd) {
+        return fd;
+    }
+
+    write(fd, addr, reg, len, data);
     return close(fd);
+}
+
+int I2cDev::write(uint8_t addr, uint8_t reg,
+    SingleData data) const
+{
+    return write(addr, reg, data.first, data.second);
 }
 
 template <typename... Args>
 int I2cDev::write(fd_t fd, uint8_t addr, uint8_t reg,
-    DataType type, data_t data, Args... args) const
+    DataLen len, data_t data, Args... args) const
 {
-    match_and_return(write(fd, addr, reg, type, data), _, _ < 0);
-    return write(fd, addr, reg, type, args...);
+    auto real_len = write(fd, addr, reg, len, data);
+
+    if (real_len != static_cast<int>(len)) {
+        return real_len;
+    }
+
+    return write(fd, addr, reg, len, args...);
 }
 
 int I2cDev::write(fd_t fd, uint8_t addr, uint8_t reg,
-    DataType type, data_t data) const
+    DataLen len, data_t data) const
 {
-    match_and_return(ioctl(fd, I2C_SLAVE, addr), _, _ < 0);
+    auto error = ioctl(fd, 0x0703, addr);
+
+    if (0 > error) {
+        return error;
+    }
 
     auto buf = (data << 8) + reg;
-    return ::write(fd, &buf, type);
+    return ::write(fd, &buf, len);
+}
+
+int I2cDev::write(fd_t fd, uint8_t addr, uint8_t reg,
+    SingleData data) const
+{
+    return write(fd, addr, reg, data.first, data.second);
 }

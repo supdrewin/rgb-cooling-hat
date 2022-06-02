@@ -5,19 +5,23 @@
 /// License, v. 2.0. If a copy of the MPL was not distributed with this
 /// file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-#include <algorithm>
+#include <cstdlib>
 #include <cstring>
+
+#include <algorithm>
 #include <iostream>
+#include <map>
+#include <string>
+#include <vector>
 
 #include "I2cDev.hh"
-#include "macro.hh"
 
-void help(char**, int);
+void help(char**, int) __attribute__((__noreturn__));
 
 int main(int argc, char** argv)
 {
-    HashMap<String, Vec<String>> args;
-    Pair<String, Vec<String>> pair;
+    std::map<std::string, std::vector<std::string>> args;
+    std::pair<std::string, std::vector<std::string>> pair;
 
     for (int i = 1; i < argc; ++i) {
         auto pos = std::find_if(
@@ -64,7 +68,7 @@ int main(int argc, char** argv)
     std::cout << "\n}\n\n";
 #endif
 
-    block(help)
+#pragma mark help
     {
         auto iter = args.find("help");
 
@@ -76,11 +80,9 @@ int main(int argc, char** argv)
             help(argv, EXIT_SUCCESS);
         }
     }
+#pragma mark help
 
-    Vec<String> files;
-
-    block(device)
-    {
+    auto devices = [&]() {
         auto iter = args.find("device");
 
         if (iter == args.end()) {
@@ -91,16 +93,14 @@ int main(int argc, char** argv)
             help(argv, EXIT_FAILURE);
         }
 
-        for (auto& id : iter->second) {
-            files.push_back("/dev/i2c-" + id);
-        }
-    }
+        return iter->second;
+    }();
 
     auto getopti = [&](const char* l, const char* s) {
-        auto iter = args.find(l);
+        auto iter = args.find(s);
 
         if (iter == args.end()) {
-            iter = args.find(s);
+            iter = args.find(l);
         }
 
         if (iter == args.end() || 1 != iter->second.size()) {
@@ -113,45 +113,42 @@ int main(int argc, char** argv)
     uint8_t addr = getopti("address", "a");
     uint8_t reg = getopti("register", "r");
 
-    I2cDev::DataType type;
-    I2cDev::data_t data;
-
-    block(data)
-    {
-        auto iter = args.find("data");
+    I2cDev::SingleData data = [&]() {
+        auto iter = args.find("d");
 
         if (iter == args.end()) {
-            iter = args.find("d");
+            iter = args.find("data");
         }
 
         if (iter == args.end() || 2 != iter->second.size()) {
             help(argv, EXIT_FAILURE);
         }
 
-        auto const& tp = iter->second[0];
+        auto data = std::stoi(iter->second[1], nullptr, 16);
+        auto const& type = iter->second[0];
 
-        if ("byte" == tp || "b" == tp) {
-            type = I2cDev::Byte;
-        } else if ("word" == tp || "w" == tp) {
-            type = I2cDev::Word;
-        } else {
-            std::cerr << "Invalid data type: "
-                      << tp << std::endl;
-            help(argv, EXIT_FAILURE);
+        if ("byte" == type || "b" == type) {
+            return std::make_pair(I2cDev::Byte, data);
         }
 
-        data = static_cast<I2cDev::data_t>(std::stoi(
-            iter->second[1], nullptr, 16));
-    }
+        if ("word" == type || "w" == type) {
+            return std::make_pair(I2cDev::Word, data);
+        }
+
+        std::cerr << "Invalid data type: "
+                  << type << std::endl;
+        help(argv, EXIT_FAILURE);
+    }();
 
     auto status = EXIT_SUCCESS;
 
-    for (auto& file : files) {
-        if (0 > I2cDev(file).write(addr, reg, type, data)) {
+    for (auto& index : devices) {
+        if (I2cDev(index, I2cDev::Index).write(addr, reg, data)
+            != static_cast<int>(data.first)) {
             std::cerr << std::hex << "Failed to send data ["
-                      << data << "] using register ["
-                      << reg << "] to I2C device ["
-                      << file << "] via address ["
+                      << data.second << "] using register ["
+                      << reg << "] to I2C device index ["
+                      << index << "] via address ["
                       << addr << "]!" << std::endl;
 
             status = EXIT_FAILURE;

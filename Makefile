@@ -2,11 +2,13 @@ PREFIX := /usr
 
 .PHONY: i2c-oled install uninstall clean
 
-all: i2c-oled
-	 $(MAKE) PROJECT_ROOT=$(PWD) -C src
+all: i2c-oled i2cw
 
 i2c-oled:
 	cargo build --release
+
+i2cw:
+	$(MAKE) PROJECT_ROOT=$(PWD) -C src
 
 install: all
 	$(MAKE) PREFIX=$(PREFIX) -C src install

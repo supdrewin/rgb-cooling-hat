@@ -7,36 +7,53 @@
 
 #pragma once
 
-#include "type.hh"
+#include <cstddef>
+#include <cstdint>
+
+#include <string>
 
 class I2cDev {
 public:
-    using data_t = uint32_t;
-    using fd_t = int;
+    enum InitType {
+        Index,
+        Path,
+    };
 
-    enum DataType : size_t {
+    enum DataLen : size_t {
         Byte = 2,
         Word = 3,
     };
 
+    using data_t = uint32_t;
+    using fd_t = int;
+
+    using SingleData = std::pair<DataLen, data_t>;
+
     I2cDev(I2cDev&& dev);
 
-    I2cDev(String&& filename);
-    I2cDev(String const& filename);
+    I2cDev(std::string const& raw, InitType tp);
 
     void operator=(I2cDev&& dev);
 
+    fd_t open() const;
+
     template <typename... Args>
     int write(uint8_t addr, uint8_t reg,
-        DataType type, Args... data) const;
+        DataLen len, Args... data) const;
+
+    int write(uint8_t addr, uint8_t reg,
+        SingleData data) const;
 
     template <typename... Args>
     int write(fd_t fd, uint8_t addr, uint8_t reg,
-        DataType type, data_t data, Args... args) const;
+        DataLen len, data_t data, Args... args) const;
 
     int write(fd_t fd, uint8_t addr, uint8_t reg,
-        DataType type, data_t data) const;
+        DataLen len, data_t data) const;
+
+    int write(fd_t fd, uint8_t addr, uint8_t reg,
+        SingleData data) const;
 
 private:
-    String filename;
+    std::string filename;
 };
