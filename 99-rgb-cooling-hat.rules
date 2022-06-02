@@ -1,2 +1,0 @@
-KERNEL=="i2c-[0-9]*", ACTION=="add|change", RUN+="/sbin/i2c-rgb --mode breathing --color yellow"
-KERNEL=="i2c-[0-9]*", ACTION=="add|change", RUN+="/sbin/i2cw -i %n -a 0x0d -r 0x08 -d b 0x01"

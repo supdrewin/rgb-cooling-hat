@@ -15,7 +15,6 @@ i2c-oled:
 
 install: all
 	install -Dm644 LICENSE.md -t /usr/share/licenses/rgb-cooling-hat
-	install -Dm644 99-rgb-cooling-hat.rules -t /etc/udev/rules.d
 	install -Dm644 i2c-pwm.service -t /lib/systemd/system
 	install -Dm755 i2cw -t /sbin
 	install -Dm755 i2c-oled/target/release/i2c-oled -t /sbin
@@ -24,7 +23,6 @@ install: all
 
 uninstall:
 	$(RM) -r /usr/share/licenses/rgb-cooling-hat
-	$(RM) /etc/udev/rules.d/99-rgb-cooling-hat.rules
 	$(RM) /lib/systemd/system/i2c-pwm.service
 	$(RM) /sbin/i2cw
 	$(RM) /sbin/i2c-oled
