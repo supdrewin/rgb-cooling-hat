@@ -35,6 +35,8 @@ public:
 
     void operator=(I2cDev&& dev);
 
+    bool is_available(uint8_t addr) const;
+
     fd_t open() const;
 
     template <typename... Args>

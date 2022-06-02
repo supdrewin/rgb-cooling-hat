@@ -28,6 +28,22 @@ void I2cDev::operator=(I2cDev&& dev)
     filename = std::move(dev.filename);
 }
 
+bool I2cDev::is_available(uint8_t addr) const
+{
+    auto error = [&addr, this]() {
+        auto fd = open();
+
+        if (-1 != fd) {
+            auto error = ioctl(fd, 0x0703, addr);
+            return close(fd), error;
+        }
+
+        return fd;
+    }();
+
+    return !(0 > error);
+}
+
 I2cDev::fd_t I2cDev::open() const
 {
     return ::open(filename.c_str(), O_RDWR);
@@ -53,7 +69,7 @@ int I2cDev::write(uint8_t addr, uint8_t reg,
 {
     auto fd = open();
 
-    if (0 > fd) {
+    if (-1 == fd) {
         return fd;
     }
 

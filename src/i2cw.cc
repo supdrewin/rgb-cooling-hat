@@ -16,7 +16,7 @@
 
 #include "I2cDev.hh"
 
-void help(char**, int) __attribute__((__noreturn__));
+void help(char** argv, int status) __attribute__((__noreturn__));
 
 int main(int argc, char** argv)
 {
@@ -96,7 +96,37 @@ int main(int argc, char** argv)
         return iter->second;
     }();
 
-    auto getopti = [&](const char* l, const char* s) {
+#pragma mark check
+    {
+        auto iter = args.find("c");
+
+        if (iter == args.end()) {
+            iter = args.find("check");
+        }
+
+        if (iter == args.end()) {
+            goto no_check_requested;
+        }
+
+        if (1 != iter->second.size()) {
+            help(argv, EXIT_FAILURE);
+        }
+
+        if (1 != devices.size()) {
+            help(argv, EXIT_FAILURE);
+        }
+
+        auto addr = std::stoi(iter->second[0], nullptr, 16);
+
+        return I2cDev(devices.front(), I2cDev::Index)
+                   .is_available(addr)
+            ? EXIT_SUCCESS
+            : EXIT_FAILURE;
+    }
+#pragma mark check
+
+no_check_requested:
+    auto getopti = [&](auto l, auto s) {
         auto iter = args.find(s);
 
         if (iter == args.end()) {
@@ -142,7 +172,7 @@ int main(int argc, char** argv)
 
     auto status = EXIT_SUCCESS;
 
-    for (auto& index : devices) {
+    for (auto const& index : devices) {
         if (I2cDev(index, I2cDev::Index).write(addr, reg, data)
             != static_cast<int>(data.first)) {
             std::cerr << std::hex << "Failed to send data ["
