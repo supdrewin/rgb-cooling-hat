@@ -14,7 +14,7 @@
     for i2c_dev in $i2c_devs; do
         i2c_dev=${i2c_dev##*-}
 
-        if i2cdetect -y "$i2c_dev" | grep -q 0d; then
+        if $i2cw_path -i "$i2c_dev" -c d; then
             export i2c_dev
             break
         fi
@@ -22,7 +22,7 @@
 }
 
 [[ $i2c_rgb_cmd ]] || {
-    i2c_rgb_cmd="$i2cw_path -i $i2c_dev -a 0x0d"
+    i2c_rgb_cmd="$i2cw_path -i $i2c_dev -a d"
     export i2c_rgb_cmd
 }
 
@@ -53,34 +53,34 @@ options:
         local g=${color:2:2}
         local b=${color:4:2}
 
-        $i2c_rgb_cmd -r 0x01 -d b "$r"
-        $i2c_rgb_cmd -r 0x02 -d b "$g"
-        $i2c_rgb_cmd -r 0x03 -d b "$b"
+        $i2c_rgb_cmd -r 1 -d b "$r"
+        $i2c_rgb_cmd -r 2 -d b "$g"
+        $i2c_rgb_cmd -r 3 -d b "$b"
     }
 
     1() {
-        $i2c_rgb_cmd -r 0x00 -d b 0x00
+        $i2c_rgb_cmd -r 0 -d b 0
 
         # shellcheck disable=SC2086
         $1 $2
     }
 
     2() {
-        $i2c_rgb_cmd -r 0x00 -d b 0x01
+        $i2c_rgb_cmd -r 0 -d b 1
 
         # shellcheck disable=SC2086
         $1 $2
     }
 
     3() {
-        $i2c_rgb_cmd -r 0x00 -d b 0x02
+        $i2c_rgb_cmd -r 0 -d b 2
 
         # shellcheck disable=SC2086
         $1 $2
     }
 
     all() {
-        $i2c_rgb_cmd -r 0x00 -d b 0xff
+        $i2c_rgb_cmd -r 0 -d b ff
 
         # shellcheck disable=SC2086
         $1 $2
@@ -92,60 +92,60 @@ options:
 --mode() {
     --color() {
         red() {
-            $i2c_rgb_cmd -r 0x06 -d b 0x00
+            $i2c_rgb_cmd -r 6 -d b 0
         }
 
         green() {
-            $i2c_rgb_cmd -r 0x06 -d b 0x01
+            $i2c_rgb_cmd -r 6 -d b 1
         }
 
         blue() {
-            $i2c_rgb_cmd -r 0x06 -d b 0x02
+            $i2c_rgb_cmd -r 6 -d b 2
         }
 
         yellow() {
-            $i2c_rgb_cmd -r 0x06 -d b 0x03
+            $i2c_rgb_cmd -r 6 -d b 3
         }
 
         purple() {
-            $i2c_rgb_cmd -r 0x06 -d b 0x04
+            $i2c_rgb_cmd -r 6 -d b 4
         }
 
         cyan() {
-            $i2c_rgb_cmd -r 0x06 -d b 0x05
+            $i2c_rgb_cmd -r 6 -d b 5
         }
 
         white() {
-            $i2c_rgb_cmd -r 0x06 -d b 0x06
+            $i2c_rgb_cmd -r 6 -d b 6
         }
 
         "$1"
     }
 
     water() {
-        $i2c_rgb_cmd -r 0x04 -d b 0x00
+        $i2c_rgb_cmd -r 4 -d b 0
 
         # shellcheck disable=SC2086
         $1 $2
     }
 
     breathing() {
-        $i2c_rgb_cmd -r 0x04 -d b 0x01
+        $i2c_rgb_cmd -r 4 -d b 1
 
         # shellcheck disable=SC2086
         $1 $2
     }
 
     marquee() {
-        $i2c_rgb_cmd -r 0x04 -d b 0x02
+        $i2c_rgb_cmd -r 4 -d b 2
     }
 
     rainbow() {
-        $i2c_rgb_cmd -r 0x04 -d b 0x03
+        $i2c_rgb_cmd -r 4 -d b 3
     }
 
     dazzle() {
-        $i2c_rgb_cmd -r 0x04 -d b 0x04
+        $i2c_rgb_cmd -r 4 -d b 4
     }
 
     "$@"
@@ -153,22 +153,22 @@ options:
 
 --speed() {
     low() {
-        $i2c_rgb_cmd -r 0x05 -d b 0x00
+        $i2c_rgb_cmd -r 5 -d b 0
     }
 
     middle() {
-        $i2c_rgb_cmd -r 0x05 -d b 0x01
+        $i2c_rgb_cmd -r 5 -d b 1
     }
 
     high() {
-        $i2c_rgb_cmd -r 0x05 -d b 0x02
+        $i2c_rgb_cmd -r 5 -d b 2
     }
 
     "$1"
 }
 
 --close() {
-    $i2c_rgb_cmd -r 0x07 -d b 0x00
+    $i2c_rgb_cmd -r 7 -d b 0
 }
 
 "$@"
