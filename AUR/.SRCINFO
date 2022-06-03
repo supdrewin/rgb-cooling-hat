@@ -1,0 +1,16 @@
+pkgbase = rgb-cooling-hat-git
+	pkgdesc = Control the RGB fan and more of YB-EPV02 via I2C protocol
+	pkgver = r37.7e45365
+	pkgrel = 1
+	url = https://github.com/supdrewin/rgb-cooling-hat
+	install = rgb-cooling-hat.install
+	arch = any
+	license = MPL2
+	makedepends = cargo
+	makedepends = git
+	provides = rgb-cooling-hat
+	conflicts = rgb-cooling-hat
+	source = rgb-cooling-hat-git::git+https://github.com/supdrewin/rgb-cooling-hat
+	md5sums = SKIP
+
+pkgname = rgb-cooling-hat-git

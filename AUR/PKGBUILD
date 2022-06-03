@@ -1,0 +1,33 @@
+# Maintainer: Supdrewin <supdrewin at outlook dot com>
+
+# shellcheck disable=SC2034,SC2148,SC2154
+
+pkgname=rgb-cooling-hat-git
+pkgver=r37.7e45365
+pkgrel=1
+pkgdesc="Control the RGB fan and more of YB-EPV02 via I2C protocol"
+arch=('any')
+url=https://github.com/supdrewin/rgb-cooling-hat
+license=('MPL2')
+makedepends=('cargo' 'git')
+provides=('rgb-cooling-hat')
+conflicts=('rgb-cooling-hat')
+install=${pkgname/-git/}.install
+source=("$pkgname::git+$url")
+md5sums=('SKIP')
+
+pkgver() {
+    cd "$pkgname" && (
+        set -o pipefail
+        git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+            printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+    )
+}
+
+build() {
+    cd "$pkgname" && make
+}
+
+package() {
+    cd "$pkgname" && make PREFIX="$pkgdir" install
+}
