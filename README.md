@@ -26,21 +26,32 @@ Dependency:
 
 ### Install
 
-Install all files:
+- Arch Linux
 
-``` shell
-$ make install
-```
+  change `pwd` into subdir `AUR`,
+  then using `makepkg`:
 
-Optional enable the pwm service:
+  ``` shell
+  $ makepkg -csi
+  ```
 
-``` shell
-$ systemctl enable --now i2c-fan
-```
+- Others
+
+  Install all files:
+
+  ``` shell
+  $ make install
+  ```
+
+  Optional enable the fan control service:
+
+  ``` shell
+  $ systemctl enable --now i2c-fan
+  ```
 
 ### Uninstall
 
-If you enable the pwm service previous,
+If you enable the fan control service previous,
 firstly disable it:
 
 ``` shell
