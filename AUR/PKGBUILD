@@ -3,7 +3,7 @@
 # shellcheck disable=SC2034,SC2148,SC2154
 
 pkgname=rgb-cooling-hat-git
-pkgver=r37.7e45365
+pkgver=r38.0075f34
 pkgrel=1
 pkgdesc="Control the RGB fan and more of YB-EPV02 via I2C protocol"
 arch=('any')
@@ -19,8 +19,9 @@ md5sums=('SKIP')
 pkgver() {
     cd "$pkgname" && (
         set -o pipefail
-        git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' ||
+        git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' || {
             printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+        }
     )
 }
 
