@@ -1,7 +1,7 @@
 CXXFLAGS += \
 	-I$(PROJECT_ROOT)/include \
 	-O2 -flto -fno-exceptions -pipe \
-	-pedantic -Wall -Wextra  -Wsign-conversion \
+	-pedantic -Wall -Wextra -Wsign-conversion \
 	-Wno-unknown-pragmas
 
 i2cw: i2cw.cc i2cw_help.cc I2cDev.o
