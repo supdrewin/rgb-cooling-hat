@@ -12,7 +12,9 @@ install:
 	install -Dm755 main.sh -t $(PREFIX)/lib/rgb-cooling-hat
 	sed -i 's|%{prefix}|$(PREFIX)|' $(PREFIX)/lib/rgb-cooling-hat/main.sh
 
-	ln -fs $(PREFIX)/lib/rgb-cooling-hat/main.sh $(PREFIX)/bin/rgb-cooling-hat
+	((PACKAGE == 1)) || ln -fs \
+		$(PREFIX)/lib/rgb-cooling-hat/main.sh \
+		$(PREFIX)/bin/rgb-cooling-hat
 
 uninstall:
 	$(RM) -r $(PREFIX)/lib/rgb-cooling-hat
