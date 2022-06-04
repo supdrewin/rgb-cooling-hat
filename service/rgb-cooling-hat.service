@@ -2,7 +2,7 @@
 Description=RGB Cooling HAT system service
 
 [Service]
-ExecStart=%/bin/rgb-cooling-hat
+ExecStart=%{prefix}/bin/rgb-cooling-hat
 Restart=on-failure
 RestartPreventExitStatus=127 132
 

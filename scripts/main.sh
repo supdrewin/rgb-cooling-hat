@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# rgb-cooling-hat - written by supdrewin
+# main.sh - written by supdrewin
 # Wed May 4 21:12:16 CST 2022
 
 [[ $1 ]] && {
-    path="%/lib/rgb-cooling-hat/$1.sh"
+    path="%{prefix}/lib/rgb-cooling-hat/$1.sh"
 
     fan() {
         $path "$@"
@@ -62,12 +62,12 @@ for device in $devices; do
 done
 
 [[ $id ]] && {
-    "%/lib/rgb-cooling-hat/ssd1306" "$id" "$temp_path" &
+    "%{prefix}/lib/rgb-cooling-hat/ssd1306" "$id" "$temp_path" &
 }
 
 while :; do
     ((speed = $(cat "$temp_path") / 500)) && {
-        "%/lib/rgb-cooling-hat/fan.sh" $speed
+        "%{prefix}/lib/rgb-cooling-hat/fan.sh" $speed
         sleep 1
     }
 done

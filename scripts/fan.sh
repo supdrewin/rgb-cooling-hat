@@ -22,7 +22,7 @@ options:
 
 [[ $1 = --help ]] && help
 
-"%/lib/rgb-cooling-hat/env.sh"
+"%{prefix}/lib/rgb-cooling-hat/env.sh"
 
 if (($1 == 0)); then
     speed=0

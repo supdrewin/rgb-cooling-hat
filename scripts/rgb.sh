@@ -4,7 +4,7 @@
 # Fri May 6 23:05:04 CST 2022
 
 # shellcheck disable=SC2154
-"%/lib/rgb-cooling-hat/env.sh"
+"%{prefix}/lib/rgb-cooling-hat/env.sh"
 
 --help() {
     local self=${0##*/}
