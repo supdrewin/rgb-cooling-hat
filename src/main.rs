@@ -4,7 +4,7 @@ use embedded_graphics::{
     prelude::*,
     text::{Baseline, Text},
 };
-use i2c_oled::i2c::I2C;
+use rgb_cooling_hat::i2c::I2C;
 use ssd1306::{prelude::*, I2CDisplayInterface, Ssd1306};
 use std::{env, fs, io, thread, time::Duration};
 

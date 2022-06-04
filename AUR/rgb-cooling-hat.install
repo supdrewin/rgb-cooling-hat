@@ -1,7 +1,7 @@
 post_install() {
-    systemctl enable --now i2c-fan
+    systemctl enable --now rgb-cooling-hat
 }
 
 pre_remove() {
-    systemctl disable --now i2c-fan
+    systemctl disable --now rgb-cooling-hat
 }

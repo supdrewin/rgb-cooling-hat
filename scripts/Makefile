@@ -1,9 +1,13 @@
 .PHONY: install uninstall
 
 install:
-	install -Dm755 i2c-fan.sh $(PREFIX)/sbin/i2c-fan
-	install -Dm755 i2c-rgb.sh $(PREFIX)/sbin/i2c-rgb
+	install -Dm755 env.sh -t $(PREFIX)/lib/rgb-cooling-hat
+
+	install -Dm755 fan.sh -t $(PREFIX)/lib/rgb-cooling-hat
+	sed -i 's|%|$(PREFIX)|' $(PREFIX)/lib/rgb-cooling-hat/fan.sh
+
+	install -Dm755 rgb.sh -t $(PREFIX)/lib/rgb-cooling-hat
+	sed -i 's|%|$(PREFIX)|' $(PREFIX)/lib/rgb-cooling-hat/rgb.sh
 
 uninstall:
-	$(RM) $(PREFIX)/sbin/i2c-fan
-	$(RM) $(PREFIX)/sbin/i2c-rgb
+	$(RM) -r $(PREFIX)/lib/rgb-cooling-hat

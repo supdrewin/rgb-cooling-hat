@@ -1,7 +1,12 @@
 .PHONY: install uninstall
 
 install:
-	install -Dm644 i2c-fan.service -t $(PREFIX)/lib/systemd/system
+	install -Dm755 rgb-cooling-hat -t $(PREFIX)/bin
+	sed -i 's|%|$(PREFIX)|' $(PREFIX)/bin/rgb-cooling-hat
+
+	install -Dm644 rgb-cooling-hat.service -t $(PREFIX)/lib/systemd/system
+	sed -i 's|%|$(PREFIX)|' $(PREFIX)/lib/systemd/system/rgb-cooling-hat.service
 
 uninstall:
-	$(RM) $(PREFIX)/lib/systemd/system/i2c-fan.service
+	$(RM) $(PREFIX)/bin/rgb-cooling-hat
+	$(RM) $(PREFIX)/lib/systemd/system/rgb-cooling-hat.service

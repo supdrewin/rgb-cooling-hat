@@ -6,8 +6,8 @@ This repository aims to control the RGB fan and more of
 ### Features
 
 - Auto changes the fan speed according to current tempearture.
-- Fully control the RGB LEDs via `i2c-rgb` command.
-- Provides I2C write feature via `i2cw` command.
+- Full manager utility `rgb-cooling-hat` for fan/RGB control.
+- Provides I2C write (8/16 Bit) feature via `i2cw` command.
 - Show current `Freq` and `Temp` if OLED display available.
 
 ### Pre-required
@@ -46,7 +46,7 @@ Dependency:
   Optional enable the fan control service:
 
   ``` shell
-  $ systemctl enable --now i2c-fan
+  $ systemctl enable --now rgb-cooling-hat
   ```
 
 ### Uninstall
@@ -55,7 +55,7 @@ If you enable the fan control service previous,
 firstly disable it:
 
 ``` shell
-$ systemctl disable --now i2c-fan
+$ systemctl disable --now rgb-cooling-hat
 ```
 
 Uninstall all files:

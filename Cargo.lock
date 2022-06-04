@@ -124,16 +124,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "i2c-oled"
-version = "0.1.0"
-dependencies = [
- "embedded-graphics",
- "embedded-hal",
- "i2c-linux",
- "ssd1306",
-]
-
-[[package]]
 name = "libc"
 version = "0.2.126"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -176,6 +166,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8a3cb2f74a9891e76958b9e0ccd269a25b466c3ae3bb3efd71db157248308c4a"
 dependencies = [
  "uninitialized",
+]
+
+[[package]]
+name = "rgb-cooling-hat"
+version = "0.1.0"
+dependencies = [
+ "embedded-graphics",
+ "embedded-hal",
+ "i2c-linux",
+ "ssd1306",
 ]
 
 [[package]]

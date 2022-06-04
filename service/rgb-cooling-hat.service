@@ -1,8 +1,8 @@
 [Unit]
-Description=Control the speed of fan via I2C protocol
+Description=RGB Cooling HAT system service
 
 [Service]
-ExecStart=/sbin/i2c-fan
+ExecStart=%/bin/rgb-cooling-hat
 Restart=on-failure
 RestartPreventExitStatus=127 132
 

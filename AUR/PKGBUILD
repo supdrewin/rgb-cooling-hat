@@ -3,7 +3,7 @@
 # shellcheck disable=SC2034,SC2148,SC2154
 
 pkgname=rgb-cooling-hat-git
-pkgver=r38.0075f34
+pkgver=r41.306dfd2
 pkgrel=1
 pkgdesc="Control the RGB fan and more of YB-EPV02 via I2C protocol"
 arch=('any')
