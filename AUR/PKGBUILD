@@ -3,7 +3,7 @@
 # shellcheck disable=SC2034,SC2148,SC2154
 
 pkgname=rgb-cooling-hat-git
-pkgver=r43.0f3c208
+pkgver=r44.1c4e7fc
 pkgrel=1
 pkgdesc="Control the RGB fan and more of YB-EPV02 via I2C protocol"
 arch=('any')
@@ -19,6 +19,7 @@ md5sums=('SKIP')
 pkgver() {
     cd "$pkgname" && (
         set -o pipefail
+
         git describe --long 2>/dev/null | sed 's/\([^-]*-g\)/r\1/;s/-/./g' || {
             printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
         }
@@ -30,10 +31,14 @@ build() {
 }
 
 package() {
-    export PACKAGE=1
+    export PACKAGE_ENV=1
 
-    cd "$pkgname" &&
-        make PREFIX="$pkgdir/usr" install &&
-        ln -fs "/usr/lib/rgb-cooling-hat/main.sh" \
-            "$pkgdir/usr/bin/rgb-cooling-hat"
+    cd "$pkgname" && {
+        make PREFIX="$pkgdir/usr" install && {
+            ln -fs "/usr/lib/rgb-cooling-hat/main.sh" \
+                "$pkgdir/usr/bin/rgb-cooling-hat"
+        }
+    }
+
+    unset PACKAGE_ENV
 }

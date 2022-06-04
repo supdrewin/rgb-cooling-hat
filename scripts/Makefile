@@ -12,7 +12,7 @@ install:
 	install -Dm755 main.sh -t $(PREFIX)/lib/rgb-cooling-hat
 	sed -i 's|%{prefix}|$(PREFIX)|' $(PREFIX)/lib/rgb-cooling-hat/main.sh
 
-	((PACKAGE == 1)) || ln -fs \
+	((PACKAGE_ENV == 1)) || ln -fs \
 		$(PREFIX)/lib/rgb-cooling-hat/main.sh \
 		$(PREFIX)/bin/rgb-cooling-hat
 
