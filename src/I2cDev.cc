@@ -30,23 +30,36 @@ void I2cDev::operator=(I2cDev&& dev)
 
 bool I2cDev::is_available(uint8_t addr) const
 {
-    auto error = [&addr, this]() {
-        auto fd = open();
-
-        if (-1 != fd) {
-            auto error = ioctl(fd, 0x0703, addr);
-            return close(fd), error;
-        }
-
-        return fd;
-    }();
-
-    return !(0 > error);
+    SingleData data = std::make_pair(DataLen::Byte, 0);
+    return read(addr, data) == static_cast<int>(data.first);
 }
 
 I2cDev::fd_t I2cDev::open() const
 {
     return ::open(filename.c_str(), O_RDWR);
+}
+
+int I2cDev::read(uint8_t addr, SingleData& data) const
+{
+    auto fd = open();
+
+    if (-1 == fd) {
+        return fd;
+    }
+
+    read(fd, addr, data);
+    return close(fd);
+}
+
+int I2cDev::read(fd_t fd, uint8_t addr, SingleData& data) const
+{
+    auto error = ioctl(fd, 0x0703, addr);
+
+    if (0 > error) {
+        return error;
+    }
+
+    return ::read(fd, &data.second, data.first);
 }
 
 template <typename... Args>

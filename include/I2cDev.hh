@@ -11,6 +11,7 @@
 #include <cstdint>
 
 #include <string>
+#include <utility>
 
 class I2cDev {
 public:
@@ -38,6 +39,10 @@ public:
     bool is_available(uint8_t addr) const;
 
     fd_t open() const;
+
+    int read(uint8_t addr, SingleData& data) const;
+
+    int read(fd_t fd, uint8_t addr, SingleData& data) const;
 
     template <typename... Args>
     int write(uint8_t addr, uint8_t reg,
