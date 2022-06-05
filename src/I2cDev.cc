@@ -47,8 +47,8 @@ int I2cDev::read(uint8_t addr, SingleData& data) const
         return fd;
     }
 
-    read(fd, addr, data);
-    return close(fd);
+    auto status = read(fd, addr, data);
+    return close(fd), status;
 }
 
 int I2cDev::read(fd_t fd, uint8_t addr, SingleData& data) const
