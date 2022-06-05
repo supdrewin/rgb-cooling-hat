@@ -175,10 +175,10 @@ no_check_requested:
     for (auto const& index : devices) {
         if (I2cDev(index, I2cDev::Index).write(addr, reg, data)
             != static_cast<int>(data.first)) {
-            std::cerr << std::hex << "Failed to send data ["
-                      << data.second << "] using register ["
-                      << reg << "] to I2C device index ["
-                      << index << "] via address ["
+            std::cerr << std::hex << "Failed to send data [0x"
+                      << data.second << "] using register [0x"
+                      << reg << "] to I2C device index [0x"
+                      << index << "] via address [0x"
                       << addr << "]!" << std::endl;
 
             status = EXIT_FAILURE;
