@@ -140,8 +140,8 @@ no_check_requested:
         return std::stoi(iter->second[0], nullptr, 16);
     };
 
-    uint8_t addr = getopti("address", "a");
-    uint8_t reg = getopti("register", "r");
+    auto addr = getopti("address", "a");
+    auto reg = getopti("register", "r");
 
     I2cDev::SingleData data = [&]() {
         auto iter = args.find("d");
