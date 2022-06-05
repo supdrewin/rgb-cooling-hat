@@ -86,8 +86,8 @@ int I2cDev::write(uint8_t addr, uint8_t reg,
         return fd;
     }
 
-    write(fd, addr, reg, len, data);
-    return close(fd);
+    auto status = write(fd, addr, reg, len, data);
+    return close(fd), status;
 }
 
 int I2cDev::write(uint8_t addr, uint8_t reg,
