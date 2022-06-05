@@ -1,7 +1,7 @@
 # RGB Cooling HAT
 
-This repository aims to control the RGB fan and more of
-`YB-EPV02` via I2C protocol.
+RGB Cooling HAT advanced utility for
+`YB-EPV02` and it's `SSD1306`.
 
 ### Features
 

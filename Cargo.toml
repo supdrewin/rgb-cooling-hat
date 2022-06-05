@@ -3,6 +3,7 @@ name = "rgb-cooling-hat"
 version = "0.1.0"
 edition = "2021"
 repository = "https://github.com/supdrewin/rgb-cooling-hat"
+description = "RGB Cooling HAT advanced utility for YB-EPV02 and it's SSD1306"
 license = "MPL-2.0"
 authors = ["supdrewin"]
 

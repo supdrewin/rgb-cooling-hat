@@ -1,5 +1,5 @@
 pkgbase = rgb-cooling-hat-git
-	pkgdesc = Control the RGB fan and more of YB-EPV02 via I2C protocol
+	pkgdesc = RGB Cooling HAT advanced utility for YB-EPV02 and it's SSD1306
 	pkgver = r51.830145d
 	pkgrel = 1
 	url = https://github.com/supdrewin/rgb-cooling-hat
