@@ -3,8 +3,8 @@
 # rgb.sh - written by supdrewin
 # Fri May 6 23:05:04 CST 2022
 
-# shellcheck disable=SC2154
-"%{prefix}/lib/rgb-cooling-hat/env.sh"
+# shellcheck disable=SC1091,SC2154
+. "%{prefix}/lib/rgb-cooling-hat/env.sh"
 
 --help() {
     local self=${0##*/}

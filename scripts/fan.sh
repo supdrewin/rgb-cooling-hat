@@ -22,7 +22,8 @@ options:
 
 [[ $1 = --help ]] && help
 
-"%{prefix}/lib/rgb-cooling-hat/env.sh"
+# shellcheck disable=SC1091
+. "%{prefix}/lib/rgb-cooling-hat/env.sh"
 
 if (($1 == 0)); then
     speed=0
