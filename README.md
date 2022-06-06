@@ -17,6 +17,14 @@ Type `rgb-cooling-hat help` to show information.
 The custom RGB script is stored in `/etc/rgb-cooling-hat/rgb`,
 content insides this script will apply at boot.
 
+Example content of `/etc/rgb-cooling-hat/rgb`:
+
+``` shell
+cmdline rgb --select 1 --color 0xff0000
+cmdline rgb --select 2 --color 0x00ff00
+cmdline rgb --select 3 --color 0x0000ff
+```
+
 Note: Please DON'T push commands spend long time into `rgb`,
 otherwise it will block anything.
 
