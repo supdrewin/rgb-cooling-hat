@@ -74,6 +74,6 @@ while :; do
         speed=$fan_speed
     fi
 
-    cmdline fan "$speed"
+    "%{prefix}/lib/rgb-cooling-hat/fan.sh" "$speed"
     sleep 1
 done
