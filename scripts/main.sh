@@ -39,8 +39,6 @@ options:
     }
 
     "$@"
-
-    exit $?
 }
 
 # shellcheck disable=SC1091
@@ -50,7 +48,11 @@ options:
 . "$rgb_cooling_hat_config_path/config"
 
 [[ $device ]] || find_device
-[[ $1 ]] && cmdline "$@"
+
+[[ $1 ]] && {
+    cmdline "$@"
+    exit $?
+}
 
 [[ $thermal ]] || find_thermal
 
