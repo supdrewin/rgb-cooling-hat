@@ -9,7 +9,7 @@ cmdline() {
     fan() {
         $path "$@"
 
-        [[ $1 =~ \d{1,3} ]] && {
+        [[ $1 =~ ^[0-9]{1,3}$ ]] && {
             write_config fan_speed "$1"
         }
     }
