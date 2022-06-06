@@ -10,6 +10,16 @@ RGB Cooling HAT advanced utility for
 - Provides I2C write (8/16 Bit) feature via `i2cw` command.
 - Show current `Freq` and `Temp` if OLED display available.
 
+### Usage
+
+Type `rgb-cooling-hat help` to show information.
+
+The custom RGB script is stored in `/etc/rgb-cooling-hat/rgb`,
+content insides this script will apply at boot.
+
+Note: Please DON'T push commands spend long time into `rgb`,
+otherwise it will block anything.
+
 ### Pre-required
 
 Hardware:

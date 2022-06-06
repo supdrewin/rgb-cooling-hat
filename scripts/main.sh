@@ -54,6 +54,11 @@ options:
     exit $?
 }
 
+[[ -f "$rgb_cooling_hat_config_path/rgb" ]] && {
+    # shellcheck disable=SC1091
+    . "$rgb_cooling_hat_config_path/rgb"
+}
+
 [[ $thermal ]] || find_thermal
 
 cmdline oled &
@@ -62,9 +67,10 @@ cmdline oled &
 
 # shellcheck disable=SC2154
 while :; do
-    # shellcheck disable=SC1091
     [[ -f "$rgb_cooling_hat_config_path/changed" ]] && {
         rm -f "$rgb_cooling_hat_config_path/changed"
+
+        # shellcheck disable=SC1091
         . "$rgb_cooling_hat_config_path/config"
     }
 
