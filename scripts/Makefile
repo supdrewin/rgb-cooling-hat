@@ -1,7 +1,8 @@
 .PHONY: install uninstall
 
 install:
-	install -Dm755 env.sh -t $(PREFIX)/lib/rgb-cooling-hat
+	install -Dm755 config.sh -t $(PREFIX)/lib/rgb-cooling-hat
+	-install -dm755 /etc/rgb-cooling-hat
 
 	install -Dm755 fan.sh -t $(PREFIX)/lib/rgb-cooling-hat
 	sed -i 's|%{prefix}|$(PREFIX)|' $(PREFIX)/lib/rgb-cooling-hat/fan.sh

@@ -3,11 +3,15 @@
 # main.sh - written by supdrewin
 # Wed May 4 21:12:16 CST 2022
 
-[[ $1 ]] && {
-    path="%{prefix}/lib/rgb-cooling-hat/$1.sh"
+cmdline() {
+    local path="%{prefix}/lib/rgb-cooling-hat/$1.sh"
 
     fan() {
         $path "$@"
+
+        [[ $1 =~ \d{1,3} ]] && {
+            write_config fan_speed "$1"
+        }
     }
 
     rgb() {
@@ -35,39 +39,34 @@ options:
     exit $?
 }
 
-zones=$(find /sys/class/thermal -name "thermal_zone[0-9]*")
+# shellcheck disable=SC1091
+. "%{prefix}/lib/rgb-cooling-hat/config.sh"
 
-for zone in $zones; do
-    [[ $(cat "$zone/type") = cpu-thermal ]] && {
-        temp_path="$zone/temp"
-        break
+# shellcheck disable=SC1091,SC2154
+. "$rgb_cooling_hat_config_path/config"
+
+[[ $device ]] || find_device
+[[ $thermal ]] || find_thermal
+
+[[ $1 ]] && cmdline "$@"
+
+# shellcheck disable=SC2154
+"%{prefix}/lib/rgb-cooling-hat/ssd1306" "$id" "$thermal" &
+
+# shellcheck disable=SC2154
+while :; do
+    # shellcheck disable=SC1091
+    [[ -f "$rgb_cooling_hat_config_path/changed" ]] && {
+        rm -f "$rgb_cooling_hat_config_path/changed"
+        . "$rgb_cooling_hat_config_path/config"
     }
-done
 
-[[ $temp_path ]] || {
-    echo "ERROR: CPU thermal unsupported"
-    exit 132
-}
-
-devices=$(find /dev -name "i2c-[0-9]*")
-
-for device in $devices; do
-    id=${device##*-}
-
-    if i2cw -i "$id" -c 3c; then
-        break
+    if [[ $fan_speed = auto ]]; then
+        ((speed = $(cat "$thermal") / 500))
+    else
+        speed=$fan_speed
     fi
 
-    unset id
-done
-
-[[ $id ]] && {
-    "%{prefix}/lib/rgb-cooling-hat/ssd1306" "$id" "$temp_path" &
-}
-
-while :; do
-    ((speed = $(cat "$temp_path") / 500)) && {
-        "%{prefix}/lib/rgb-cooling-hat/fan.sh" $speed
-        sleep 1
-    }
+    "%{prefix}/lib/rgb-cooling-hat/fan.sh" "$speed"
+    sleep 1
 done

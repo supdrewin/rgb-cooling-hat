@@ -11,6 +11,7 @@ $self - Utility for fan control
 
 usage:
   $self <speed>  set the fan speed
+  $self --auto   auto adjust fan speed
   $self --help   show this help
 
 options:
@@ -20,10 +21,18 @@ options:
     exit
 }
 
+# shellcheck disable=SC1091
+. "%{prefix}/lib/rgb-cooling-hat/config.sh"
+
+# shellcheck disable=SC1091,SC2154
+. "$rgb_cooling_hat_config_path/config"
+
 [[ $1 = --help ]] && help
 
-# shellcheck disable=SC1091
-. "%{prefix}/lib/rgb-cooling-hat/env.sh"
+[[ $1 = --auto ]] && {
+    write_config fan_speed auto
+    exit
+}
 
 if (($1 == 0)); then
     speed=0
@@ -36,4 +45,4 @@ else
 fi
 
 # shellcheck disable=SC2154
-$rgb_cooling_hat_cmd -r 8 -d b $speed
+i2cw -i "$device" -a d -r 8 -d b $speed

@@ -3,9 +3,6 @@
 # rgb.sh - written by supdrewin
 # Fri May 6 23:05:04 CST 2022
 
-# shellcheck disable=SC1091,SC2154
-. "%{prefix}/lib/rgb-cooling-hat/env.sh"
-
 --help() {
     local self=${0##*/}
 
@@ -150,5 +147,14 @@ options:
 --close() {
     $rgb_cooling_hat_cmd -r 7 -d b 0
 }
+
+# shellcheck disable=SC1091
+. "%{prefix}/lib/rgb-cooling-hat/config.sh"
+
+# shellcheck disable=SC1091,SC2154
+. "$rgb_cooling_hat_config_path/config"
+
+# shellcheck disable=SC2154
+rgb_cooling_hat_cmd="i2cw -i $device -a d"
 
 "$@"
