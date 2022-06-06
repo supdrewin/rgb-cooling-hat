@@ -46,12 +46,14 @@ options:
 . "$rgb_cooling_hat_config_path/config"
 
 [[ $device ]] || find_device
-[[ $thermal ]] || find_thermal
-
 [[ $1 ]] && cmdline "$@"
+
+[[ $thermal ]] || find_thermal
 
 # shellcheck disable=SC2154
 "%{prefix}/lib/rgb-cooling-hat/ssd1306" "$id" "$thermal" &
+
+[[ $fan_speed ]] || cmdline fan --auto
 
 # shellcheck disable=SC2154
 while :; do
@@ -67,6 +69,6 @@ while :; do
         speed=$fan_speed
     fi
 
-    "%{prefix}/lib/rgb-cooling-hat/fan.sh" "$speed"
+    cmdline fan "$speed"
     sleep 1
 done
