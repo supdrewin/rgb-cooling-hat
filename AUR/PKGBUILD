@@ -3,7 +3,7 @@
 # shellcheck disable=SC2034,SC2148,SC2154
 
 pkgname=rgb-cooling-hat-git
-pkgver=r51.830145d
+pkgver=r61.76e2342
 pkgrel=1
 pkgdesc="RGB Cooling HAT advanced utility for YB-EPV02 and it's SSD1306"
 arch=('any')
