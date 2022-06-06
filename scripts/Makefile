@@ -10,6 +10,9 @@ install:
 	install -Dm755 rgb.sh -t $(PREFIX)/lib/rgb-cooling-hat
 	sed -i 's|%{prefix}|$(PREFIX)|' $(PREFIX)/lib/rgb-cooling-hat/rgb.sh
 
+	install -Dm755 oled.sh -t $(PREFIX)/lib/rgb-cooling-hat
+	sed -i 's|%{prefix}|$(PREFIX)|' $(PREFIX)/lib/rgb-cooling-hat/oled.sh
+
 	install -Dm755 main.sh -t $(PREFIX)/lib/rgb-cooling-hat
 	sed -i 's|%{prefix}|$(PREFIX)|' $(PREFIX)/lib/rgb-cooling-hat/main.sh
 

@@ -18,6 +18,10 @@ cmdline() {
         $path "$@"
     }
 
+    oled() {
+        $path "$@"
+    }
+
     help() {
         local self=${0##*/}
 
@@ -50,8 +54,7 @@ options:
 
 [[ $thermal ]] || find_thermal
 
-# shellcheck disable=SC2154
-"%{prefix}/lib/rgb-cooling-hat/ssd1306" "$id" "$thermal" &
+cmdline oled &
 
 [[ $fan_speed ]] || cmdline fan --auto
 
