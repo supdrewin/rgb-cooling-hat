@@ -23,6 +23,9 @@ Example content of `/etc/rgb-cooling-hat/rgb`:
 cmdline rgb --select 1 --color 0xff0000
 cmdline rgb --select 2 --color 0x00ff00
 cmdline rgb --select 3 --color 0x0000ff
+
+# If you want to close the RGB lighting, uncomment below.
+# cmdline rgb --close
 ```
 
 Note: Please DON'T push commands spend long time into `rgb`,
