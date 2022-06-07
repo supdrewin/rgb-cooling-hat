@@ -58,7 +58,9 @@ options:
 
 cmdline oled &
 
-[[ $fan_speed ]] || cmdline fan --func 2 -40
+[[ $fan_speed_a && $fan_speed_b ]] || {
+    cmdline fan --func 2 -40
+}
 
 while :; do
     cmdline fan --set
