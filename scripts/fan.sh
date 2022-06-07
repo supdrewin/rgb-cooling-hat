@@ -26,12 +26,12 @@ options:
 }
 
 --func() {
-    [[ $2 && $3 ]] || return 1
+    [[ $1 && $2 ]] || return 1
 
-    write_config fan_speed_a "$2"
-    write_config fan_speed_b "$3"
+    write_config fan_speed_a "$1"
+    write_config fan_speed_b "$2"
 
-    [[ $4 = --set ]] && {
+    [[ $3 = --set ]] && {
         # shellcheck disable=SC1091,SC2154
         . "$rgb_cooling_hat_config_path/config"
 
