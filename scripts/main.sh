@@ -8,10 +8,6 @@ cmdline() {
 
     fan() {
         $path "$@"
-
-        [[ $1 =~ ^[0-9]{1,3}$ ]] && {
-            write_config fan_speed "$1"
-        }
     }
 
     rgb() {
@@ -48,6 +44,7 @@ options:
 . "$rgb_cooling_hat_config_path/config"
 
 [[ $device ]] || find_device
+[[ $thermal ]] || find_thermal
 
 [[ $1 ]] && {
     cmdline "$@"
@@ -59,27 +56,11 @@ options:
     . "$rgb_cooling_hat_config_path/rgb"
 }
 
-[[ $thermal ]] || find_thermal
-
 cmdline oled &
 
-[[ $fan_speed ]] || cmdline fan --auto
+[[ $fan_speed ]] || cmdline fan --func 2 -40
 
-# shellcheck disable=SC2154
 while :; do
-    [[ -f "$rgb_cooling_hat_config_path/changed" ]] && {
-        rm -f "$rgb_cooling_hat_config_path/changed"
-
-        # shellcheck disable=SC1091
-        . "$rgb_cooling_hat_config_path/config"
-    }
-
-    if [[ $fan_speed = auto ]]; then
-        ((speed = $(cat "$thermal") / 500))
-    else
-        speed=$fan_speed
-    fi
-
-    "%{prefix}/lib/rgb-cooling-hat/fan.sh" "$speed"
+    cmdline fan --set
     sleep 1
 done
