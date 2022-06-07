@@ -56,7 +56,7 @@ void help(char** argv, int status)
     int len = strlen(argv[0]),
         pos = len - 1;
 
-    while (0 < pos && '/' != argv[0][pos]) {
+    while (0 <= pos && '/' != argv[0][pos]) {
         --pos;
     }
 
