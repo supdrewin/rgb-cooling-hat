@@ -44,6 +44,8 @@ options:
 # shellcheck disable=SC1091,SC2154
 . "$rgb_cooling_hat_config_path/config"
 
+set -e
+
 [[ $device ]] || find_device
 [[ $thermal ]] || find_thermal
 
