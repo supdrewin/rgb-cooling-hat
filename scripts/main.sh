@@ -14,11 +14,6 @@ cmdline() {
         $path "$@"
     }
 
-    oled() {
-        # shellcheck disable=SC1090
-        . "$path"
-    }
-
     help() {
         local self=${0##*/}
 
@@ -58,9 +53,6 @@ set -e
     # shellcheck disable=SC1091
     . "$rgb_cooling_hat_config_path/rgb"
 }
-
-cmdline oled
-ssd1306 &
 
 [[ $fan_speed_a && $fan_speed_b ]] || {
     cmdline fan --func 2 20

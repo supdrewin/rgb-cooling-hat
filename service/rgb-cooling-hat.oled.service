@@ -1,0 +1,10 @@
+[Unit]
+Description=RGB Cooling HAT display service
+
+[Service]
+ExecStart=%{prefix}/lib/rgb-cooling-hat/oled.sh
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

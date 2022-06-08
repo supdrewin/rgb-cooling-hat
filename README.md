@@ -70,13 +70,20 @@ Dependency:
   $ systemctl enable --now rgb-cooling-hat
   ```
 
+  and the OLED display service:
+
+  ``` shell
+  $ systemctl enable --now rgb-cooling-hat.oled
+  ```
+
 ### Uninstall
 
-If you enable the fan control service previous,
-firstly disable it:
+If you enable the systemd services previous,
+firstly disable them:
 
 ``` shell
 $ systemctl disable --now rgb-cooling-hat
+$ systemctl disable --now rgb-cooling-hat.oled
 ```
 
 Uninstall all files:
