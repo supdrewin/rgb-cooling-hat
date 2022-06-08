@@ -16,7 +16,7 @@ usage:
 
 options:
   --func a b     set fan speed according to current temp
-                 fan_speed = temp * a + b
+                 fan_speed = a * (temp - b)
   --set          use fan speed function immediately
   --speed speed  set fan speed in percentage (0..=100)
   --help         show this help
@@ -45,7 +45,7 @@ options:
 
     temp=$(cat "$thermal" || echo 0)
 
-    ((fan_speed = "$temp" * "$fan_speed_a" / 1000 + "$fan_speed_b"))
+    ((fan_speed = "$fan_speed_a" * ("$temp" / 1000 - "$fan_speed_b")))
     "--speed" $fan_speed
 }
 
