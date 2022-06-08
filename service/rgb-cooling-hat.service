@@ -3,8 +3,9 @@ Description=RGB Cooling HAT system service
 
 [Service]
 ExecStart=%{prefix}/bin/rgb-cooling-hat
-Restart=on-failure
 RestartPreventExitStatus=127 132
+Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target
