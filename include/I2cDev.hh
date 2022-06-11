@@ -9,58 +9,81 @@
 
 #include <cstddef>
 #include <cstdint>
-
 #include <string>
 #include <utility>
 
 class I2cDev {
-public:
-    enum InitType {
-        Index,
-        Path,
-    };
+	public:
 
-    enum DataLen : size_t {
-        Byte = 2,
-        Word = 3,
-    };
+		enum InitType {
+			Index,
+			Path,
+		};
 
-    using data_t = uint32_t;
-    using fd_t = int;
+		enum DataLen : size_t {
+			Byte = 2,
+			Word = 3,
+		};
 
-    using SingleData = std::pair<DataLen, data_t>;
+		using data_t = uint32_t;
+		using fd_t   = int;
 
-    I2cDev(I2cDev&& dev);
+		using SingleData = std::pair<DataLen, data_t>;
 
-    I2cDev(std::string const& raw, InitType tp);
+		I2cDev ( I2cDev &&dev );
 
-    void operator=(I2cDev&& dev);
+		I2cDev ( std::string const &raw, InitType tp );
 
-    bool is_available(uint8_t addr) const;
+		void operator= ( I2cDev &&dev );
 
-    fd_t open() const;
+		bool is_available ( uint8_t addr ) const;
 
-    int read(uint8_t addr, SingleData& data) const;
+		fd_t open ( ) const;
 
-    int read(fd_t fd, uint8_t addr, SingleData& data) const;
+		int read ( uint8_t addr, SingleData &data ) const;
 
-    template <typename... Args>
-    int write(uint8_t addr, uint8_t reg,
-        DataLen len, Args... data) const;
+		int read ( fd_t fd, uint8_t addr, SingleData &data ) const;
 
-    int write(uint8_t addr, uint8_t reg,
-        SingleData data) const;
+		// clang-format off
+		template <typename... Args>
+		int write (
+		    uint8_t addr,
+		    uint8_t reg,
+		    DataLen len,
+		    Args... data
+		) const;
+		// clang-format on
 
-    template <typename... Args>
-    int write(fd_t fd, uint8_t addr, uint8_t reg,
-        DataLen len, data_t data, Args... args) const;
+		int write ( uint8_t addr, uint8_t reg, SingleData data ) const;
 
-    int write(fd_t fd, uint8_t addr, uint8_t reg,
-        DataLen len, data_t data) const;
+		template <typename... Args>
+		int write (
+		    fd_t    fd,
+		    uint8_t addr,
+		    uint8_t reg,
+		    DataLen len,
+		    data_t  data,
+		    Args... args
+		) const;
 
-    int write(fd_t fd, uint8_t addr, uint8_t reg,
-        SingleData data) const;
+		int write (
+		    fd_t    fd,
+		    uint8_t addr,
+		    uint8_t reg,
+		    DataLen len,
+		    data_t  data
+		) const;
 
-private:
-    std::string filename;
+		// clang-format off
+		int write (
+		    fd_t       fd,
+		    uint8_t    addr,
+		    uint8_t    reg,
+		    SingleData data
+		) const;
+		// clang-format on
+
+	private:
+
+		std::string filename;
 };

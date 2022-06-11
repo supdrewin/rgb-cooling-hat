@@ -10,7 +10,8 @@
 #include <cstdlib>
 #include <cstring>
 
-const char* HELP = R"(
+char const *HELP =
+R"(
 % - Send data to devices via I2C protocol
 
 usage:
@@ -28,44 +29,33 @@ options:
 
 )";
 
-size_t help_printf(const char* fmt, const char* str)
+inline size_t help_printf ( char const *fmt, char const *str )
 {
-    size_t len = 0;
+	size_t len = 0;
 
-    auto putc = [&len](auto pos) {
-        if (EOF != putchar(*pos)) {
-            ++len;
-        }
-    };
+	auto putc = [&len] ( auto pos ) {
+		if ( EOF != putchar ( *pos ) ) ++len;
+	};
 
-    auto puts = [putc](auto pos) {
-        while (0 != *pos) {
-            putc(pos++);
-        }
-    };
+	auto puts = [putc] ( auto pos ) {
+		while ( 0 != *pos ) putc ( pos++ );
+	};
 
-    for (; 0 != *fmt; ++fmt) {
-        '%' == *fmt ? puts(str) : putc(fmt);
-    }
+	for ( ; 0 != *fmt; ++fmt ) '%' == *fmt ? puts ( str ) : putc ( fmt );
 
-    return len;
+	return len;
 }
 
-void help(char** argv, int status)
+void help ( char **argv, int status )
 {
-    int len = strlen(argv[0]),
-        pos = len - 1;
+	int len = strlen ( argv[0] ), pos = len - 1;
 
-    while (0 <= pos && '/' != argv[0][pos]) {
-        --pos;
-    }
+	while ( 0 <= pos && '/' != argv[0][pos] ) --pos;
 
-    const char* self = argv[0];
+	char const *self = argv[0];
 
-    if (++pos <= len) {
-        self += pos;
-    }
+	if ( ++pos <= len ) self += pos;
 
-    help_printf(HELP, self);
-    exit(status);
+	help_printf ( HELP, self );
+	exit ( status );
 }
