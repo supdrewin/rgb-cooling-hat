@@ -60,12 +60,10 @@ int main ( int argc, char **argv )
 #endif
 
 #pragma mark help
+	if ( args.find ( "h" ) != args.end ( )
+	     || args.find ( "help" ) != args.end ( ) )
 	{
-		auto iter = args.find ( "h" );
-
-		if ( iter == args.end ( ) ) iter = args.find ( "help" );
-
-		help ( argv, iter == args.end ( ) );
+		help ( argv, EXIT_SUCCESS );
 	}
 #pragma mark help
 
