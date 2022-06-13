@@ -29,6 +29,7 @@ void I2cDev::operator= ( I2cDev &&dev )
 bool I2cDev::is_available ( uint8_t addr ) const
 {
 	SingleData data = std::make_pair ( DataLen::Byte, 0 );
+
 	return read ( addr, data ) == static_cast<int> ( data.first );
 }
 
@@ -44,6 +45,7 @@ int I2cDev::read ( uint8_t addr, SingleData &data ) const
 	if ( -1 == fd ) return fd;
 
 	auto status = read ( fd, addr, data );
+
 	return close ( fd ), status;
 }
 
@@ -51,9 +53,7 @@ int I2cDev::read ( fd_t fd, uint8_t addr, SingleData &data ) const
 {
 	auto error = ioctl ( fd, 0x0703, addr );
 
-	if ( 0 > error ) return error;
-
-	return ::read ( fd, &data.second, data.first );
+	return 0 > error ? error : ::read ( fd, &data.second, data.first );
 }
 
 template <typename... Args>
@@ -63,8 +63,9 @@ int I2cDev::write ( uint8_t addr, uint8_t reg, DataLen len, Args... data ) const
 
 	if ( 0 > fd ) return fd;
 
-	write ( fd, addr, reg, len, data... );
-	return close ( fd );
+	auto status = write ( fd, addr, reg, len, data... );
+
+	return close ( fd ), status;
 }
 
 template <>
@@ -75,6 +76,7 @@ int I2cDev::write ( uint8_t addr, uint8_t reg, DataLen len, data_t data ) const
 	if ( -1 == fd ) return fd;
 
 	auto status = write ( fd, addr, reg, len, data );
+
 	return close ( fd ), status;
 }
 
@@ -95,9 +97,9 @@ int I2cDev::write (
 {
 	auto real_len = write ( fd, addr, reg, len, data );
 
-	if ( real_len != static_cast<int> ( len ) ) return real_len;
-
-	return write ( fd, addr, reg, len, args... );
+	return real_len == static_cast<int> ( len )
+	         ? write ( fd, addr, reg, len, args... )
+	         : real_len;
 }
 
 int I2cDev::write (
@@ -109,11 +111,9 @@ int I2cDev::write (
 ) const
 {
 	auto error = ioctl ( fd, 0x0703, addr );
+	auto buf   = ( data << 8 ) + reg;
 
-	if ( 0 > error ) return error;
-
-	auto buf = ( data << 8 ) + reg;
-	return ::write ( fd, &buf, len );
+	return 0 > error ? error : ::write ( fd, &buf, len );
 }
 
 int I2cDev::write ( fd_t fd, uint8_t addr, uint8_t reg, SingleData data ) const

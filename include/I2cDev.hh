@@ -45,6 +45,7 @@ class I2cDev {
 		int read ( fd_t fd, uint8_t addr, SingleData &data ) const;
 
 		// clang-format off
+
 		template <typename... Args>
 		int write (
 		    uint8_t addr,
@@ -52,6 +53,7 @@ class I2cDev {
 		    DataLen len,
 		    Args... data
 		) const;
+
 		// clang-format on
 
 		int write ( uint8_t addr, uint8_t reg, SingleData data ) const;
@@ -75,12 +77,14 @@ class I2cDev {
 		) const;
 
 		// clang-format off
+
 		int write (
 		    fd_t       fd,
 		    uint8_t    addr,
 		    uint8_t    reg,
 		    SingleData data
 		) const;
+
 		// clang-format on
 
 	private:

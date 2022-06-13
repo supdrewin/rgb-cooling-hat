@@ -10,8 +10,7 @@
 #include <cstdlib>
 #include <cstring>
 
-char const *HELP =
-R"(
+char const *HELP = R"(
 % - Send data to devices via I2C protocol
 
 usage:

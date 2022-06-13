@@ -15,12 +15,16 @@
 
 #include "I2cDev.hh"
 
+#if defined( DEBUG )
+#	include <iterator>
+#endif
+
 void help ( char **argv, int status ) __attribute__ ( ( __noreturn__ ) );
 
 int main ( int argc, char **argv )
 {
-	std::map<std::string, std::vector<std::string> >  args;
-	std::pair<std::string, std::vector<std::string> > pair;
+	std::map<std::string, std::vector<std::string>>  args;
+	std::pair<std::string, std::vector<std::string>> pair;
 
 	for ( int i = 1; i < argc; ++i ) {
 		auto pos = std::find_if (
@@ -37,8 +41,7 @@ int main ( int argc, char **argv )
 					args.insert ( std::move ( pair ) );
 
 				pair.first = pos;
-				break;
-			}
+			} break;
 			default: help ( argv, EXIT_FAILURE );
 		}
 	}
@@ -46,42 +49,40 @@ int main ( int argc, char **argv )
 	if ( !pair.first.empty ( ) ) args.insert ( std::move ( pair ) );
 
 #if defined( DEBUG )
+
 	std::cout << "\nargs: {";
 
 	for ( auto &arg : args ) {
-		std::cout << "\n\t" << arg.first << ": [";
+		std::cout << "\n\t" << arg.first << ": [ ";
 
-		for ( auto &v : arg.second ) std::cout << "\n\t\t" << v << ',';
+		std::copy (
+		    arg.second.cbegin ( ),
+		    arg.second.cend ( ),
+		    std::ostream_iterator<std::string> ( std::cout, " " )
+		);
 
-		std::cout << "\n\t],";
+		std::cout << "]";
 	}
 
 	std::cout << "\n}\n\n";
+
 #endif
 
-#pragma mark help
 	if ( args.find ( "h" ) != args.end ( )
 	     || args.find ( "help" ) != args.end ( ) )
 	{
 		help ( argv, EXIT_SUCCESS );
 	}
-#pragma mark help
 
-	auto devices = [&] ( ) {
+	auto devices = [&args, argv] {
 		auto iter = args.find ( "i" );
 
-		if ( iter == args.end ( ) ) {
-			iter = args.find ( "device" );
-		}
-
-		if ( iter == args.end ( ) ) {
-			help ( argv, EXIT_FAILURE );
-		}
+		if ( iter == args.end ( ) ) iter = args.find ( "device" );
+		if ( iter == args.end ( ) ) help ( argv, EXIT_FAILURE );
 
 		return iter->second;
 	}( );
 
-#pragma mark check
 	{
 		auto iter = args.find ( "c" );
 
@@ -98,10 +99,10 @@ int main ( int argc, char **argv )
 		         ? EXIT_SUCCESS
 		         : EXIT_FAILURE;
 	}
-#pragma mark check
 
 no_check_requested:
-	auto getopti = [&] ( auto l, auto s ) {
+
+	auto getopti = [&args, argv] ( auto l, auto s ) {
 		auto iter = args.find ( s );
 
 		if ( iter == args.end ( ) ) iter = args.find ( l );
@@ -115,7 +116,7 @@ no_check_requested:
 	auto addr = getopti ( "address", "a" );
 	auto reg  = getopti ( "register", "r" );
 
-	I2cDev::SingleData data = [&] ( ) {
+	I2cDev::SingleData data = [&args, argv] {
 		auto iter = args.find ( "d" );
 
 		if ( iter == args.end ( ) ) iter = args.find ( "data" );
@@ -143,11 +144,13 @@ no_check_requested:
 		     != static_cast<int> ( data.first ) )
 		{
 			// clang-format off
+
 			std::cerr << std::hex    << "Failed to send data [0x"
 				  << data.second << "] using register [0x"
 				  << reg         << "] to I2C device index [0x"
 				  << index       << "] via address [0x"
 				  << addr        << "]!" << std::endl;
+
 			// clang-format on
 
 			status = EXIT_FAILURE;
