@@ -1,6 +1,6 @@
 pkgbase = rgb-cooling-hat-git
 	pkgdesc = RGB Cooling HAT advanced utility for YB-EPV02 and it's SSD1306
-	pkgver = r66.3f963eb
+	pkgver = r80.0f1ebc5
 	pkgrel = 1
 	url = https://github.com/supdrewin/rgb-cooling-hat
 	install = rgb-cooling-hat.install
