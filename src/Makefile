@@ -10,10 +10,10 @@ I2cDev.o: I2cDev.cc
 .PHONY: install uninstall clean
 
 install: i2cw
-	install -Dm755 i2cw -t $(PREFIX)/bin
+	install -Dm755 i2cw -t $(DIST)$(PREFIX)/bin
 
 uninstall:
-	$(RM) $(PREFIX)/bin/i2cw
+	$(RM) $(DIST)$(PREFIX)/bin/i2cw
 
 clean:
 	$(RM) I2cDev.o i2cw

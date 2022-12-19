@@ -11,20 +11,20 @@ i2cw:
 .PHONY: install uninstall clean
 
 install: all
-	$(MAKE) PREFIX=$(PREFIX) -C src install
-	$(MAKE) PREFIX=$(PREFIX) -C scripts install
-	$(MAKE) PREFIX=$(PREFIX) -C service install
+	$(MAKE) DIST=$(DIST) PREFIX=$(PREFIX) -C src install
+	$(MAKE) DIST=$(DIST) PREFIX=$(PREFIX) -C scripts install
+	$(MAKE) DIST=$(DIST) PREFIX=$(PREFIX) -C service install
 
-	install -Dm644 LICENSE.md -t $(PREFIX)/share/licenses/rgb-cooling-hat
-	-install -Dm755 target/release/rgb-cooling-hat $(PREFIX)/lib/rgb-cooling-hat/ssd1306
+	install -Dm644 LICENSE.md -t $(DIST)$(PREFIX)/share/licenses/rgb-cooling-hat
+	-install -Dm755 target/release/rgb-cooling-hat $(DIST)$(PREFIX)/lib/rgb-cooling-hat/ssd1306
 
 uninstall:
-	$(MAKE) PREFIX=$(PREFIX) -C src uninstall
-	$(MAKE) PREFIX=$(PREFIX) -C scripts uninstall
-	$(MAKE) PREFIX=$(PREFIX) -C service uninstall
+	$(MAKE) DIST=$(DIST) PREFIX=$(PREFIX) -C src uninstall
+	$(MAKE) DIST=$(DIST) PREFIX=$(PREFIX) -C scripts uninstall
+	$(MAKE) DIST=$(DIST) PREFIX=$(PREFIX) -C service uninstall
 
-	$(RM) -r $(PREFIX)/share/licenses/rgb-cooling-hat
-	-$(RM) $(PREFIX)/lib/rgb-cooling-hat/ssd1306
+	$(RM) -r $(DIST)$(PREFIX)/share/licenses/rgb-cooling-hat
+	-$(RM) $(DIST)$(PREFIX)/lib/rgb-cooling-hat/ssd1306
 
 clean:
 	$(MAKE) -C src clean

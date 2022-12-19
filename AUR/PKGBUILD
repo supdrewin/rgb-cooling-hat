@@ -34,7 +34,7 @@ package() {
     export PACKAGE_ENV=1
 
     cd "$pkgname" && {
-        make PREFIX="$pkgdir/usr" install && {
+        make DIST="$pkgdir" install && {
             ln -fs "/usr/lib/rgb-cooling-hat/main.sh" \
                 "$pkgdir/usr/bin/rgb-cooling-hat"
         }
