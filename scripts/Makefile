@@ -2,7 +2,7 @@
 
 install:
 	install -Dm755 config.sh -t $(DIST)$(PREFIX)/lib/rgb-cooling-hat
-	-install -dm755 /etc/rgb-cooling-hat
+	-install -dm755 $(DIST)/etc/rgb-cooling-hat
 
 	install -Dm755 fan.sh -t $(DIST)$(PREFIX)/lib/rgb-cooling-hat
 	sed -i 's|%{prefix}|$(PREFIX)|' $(DIST)$(PREFIX)/lib/rgb-cooling-hat/fan.sh

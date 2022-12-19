@@ -3,6 +3,8 @@
 # rgb.sh - written by supdrewin
 # Fri May 6 23:05:04 CST 2022
 
+# shellcheck disable=SC2317
+
 --help() {
     local self=${0##*/}
 
